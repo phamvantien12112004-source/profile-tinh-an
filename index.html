@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tĩnh An | Phạm Văn Tiến</title>
+  <title>Phạm Văn Tiến</title>
 
   <style>
     * {
@@ -251,6 +251,13 @@
       color: var(--text-soft);
       margin-bottom: 20px;
       transition: 0.35s ease;
+      min-height: 42px;
+    }
+
+    .typing-cursor {
+      color: var(--pink);
+      font-weight: 900;
+      animation: cursorBlink 0.8s infinite;
     }
 
     .quote {
@@ -332,7 +339,16 @@
       border-radius: 28px;
       padding: 30px;
       box-shadow: 0 18px 55px var(--shadow);
-      transition: 0.35s ease;
+      transition: transform 0.28s ease, box-shadow 0.28s ease, background 0.35s ease, border-color 0.35s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-7px) rotate(-0.35deg);
+      box-shadow: 0 24px 70px rgba(168, 85, 247, 0.18);
+    }
+
+    .grid-3 .card:nth-child(even):hover {
+      transform: translateY(-7px) rotate(0.35deg);
     }
 
     .card p,
@@ -466,6 +482,64 @@
     .love-box p {
       font-size: 19px;
       color: var(--text-soft);
+    }
+
+    .today-card {
+      max-width: 820px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .today-card::before {
+      content: "“";
+      position: absolute;
+      top: -42px;
+      left: 22px;
+      font-size: 150px;
+      line-height: 1;
+      color: rgba(236, 72, 153, 0.12);
+      font-family: Georgia, serif;
+    }
+
+    .today-label {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: rgba(255, 241, 242, 0.9);
+      color: #be123c;
+      font-weight: 900;
+      font-size: 14px;
+    }
+
+    body.dark .today-label {
+      background: rgba(51, 65, 85, 0.9);
+      color: #f9a8d4;
+    }
+
+    .today-text {
+      font-size: clamp(20px, 3vw, 28px);
+      color: var(--text-main) !important;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .today-small {
+      margin-top: 14px;
+      font-size: 16px !important;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(26px);
+      transition: opacity 0.65s ease, transform 0.65s ease, box-shadow 0.28s ease, background 0.35s ease;
+    }
+
+    .reveal.show {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .social-grid {
@@ -620,6 +694,34 @@
       margin: 0 auto;
       font-size: 19px;
       color: var(--text-soft);
+    }
+
+    .password-input {
+      width: min(260px, 100%);
+      margin: 18px auto 0;
+      display: block;
+      padding: 13px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(236, 72, 153, 0.35);
+      outline: none;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      font-family: inherit;
+    }
+
+    .password-error {
+      display: none;
+      margin-top: 14px !important;
+      color: #be123c !important;
+      font-weight: 900;
+    }
+
+    body.dark .password-input {
+      background: rgba(30, 41, 59, 0.9);
+      color: #f8fafc;
+      border-color: rgba(249, 168, 212, 0.35);
     }
 
     .close-x {
@@ -779,6 +881,8 @@
 
       <div class="top-menu">
         <a href="#about">Về mình</a>
+        <a href="#little-things">Điều nhỏ</a>
+        <a href="#today-note">Hôm nay</a>
         <a href="#skills">Kỹ năng</a>
         <a href="#projects">Dự án</a>
         <a href="#social">Mạng XH</a>
@@ -795,10 +899,11 @@
   <header id="home">
     <div class="container">
       <div class="hero-card">
-        <img class="avatar" src="images/avatar.jpg" alt="Ảnh đại diện của Tĩnh An">
-        <div class="nickname">Tĩnh An</div>
+        <img class="avatar" src="images/avatar.jpg" alt="Ảnh đại diện của Phạm Văn Tiến">
         <h1 class="glow-name" data-text="Phạm Văn Tiến">Phạm Văn Tiến</h1>
-        <p class="subtitle">Một chàng trai sinh năm 2004, đang sinh sống và làm việc tại Nhật Bản</p>
+        <p class="subtitle">
+          <span id="typingText">Một chàng trai sinh năm 2004, đang sinh sống và làm việc tại Nhật Bản</span><span class="typing-cursor">|</span>
+        </p>
         <p class="quote">
           “Hướng nội một chút, chân thành nhiều chút. Có thể đôi khi cô đơn, nhưng vẫn luôn cố gắng, chăm chỉ và tin vào một tương lai tốt đẹp hơn.”
         </p>
@@ -844,6 +949,55 @@
             <li><strong>Phong cách:</strong> Nhẹ nhàng, lãng mạn</li>
           </ul>
         </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="little-things">
+    <div class="container">
+      <div class="section-title">
+        <span>Little things</span>
+        <h2>Một vài điều nhỏ về mình</h2>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon">🌙</div>
+          <h3>Hay suy nghĩ vào ban đêm</h3>
+          <p>Có những lúc mình im lặng không phải vì không có gì để nói, mà là vì trong lòng có hơi nhiều điều đang nghĩ.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">🎧</div>
+          <h3>Âm nhạc là nơi trú ẩn</h3>
+          <p>Khi mệt, mình thường nghe nhạc một mình. Có vài bài hát giống như nói hộ những điều mình chưa kịp nói ra.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon">☁️</div>
+          <h3>Thích những điều nhẹ nhàng</h3>
+          <p>Mình thích cảm giác yên bình, những cuộc trò chuyện thật lòng và những người ở lại bằng sự chân thành.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="today-note">
+    <div class="container">
+      <div class="section-title">
+        <span>Today note</span>
+        <h2>Một dòng cho hôm nay</h2>
+      </div>
+
+      <div class="card today-card">
+        <span class="today-label">Gửi bản thân</span>
+        <p class="today-text">
+          Dù hôm nay có chậm một chút cũng không sao, miễn là mình vẫn chưa bỏ cuộc.
+        </p>
+        <p class="today-small">
+          Có những ngày không cần phải thật mạnh mẽ, chỉ cần vẫn bước tiếp là đủ rồi.
+        </p>
       </div>
     </div>
   </section>
@@ -1039,6 +1193,43 @@
         </div>
       </div>
 
+      <div class="secret-content" id="passwordBox">
+        <div class="password-card">
+          <div class="lock-icon">🔐</div>
+
+          <h2>Cánh cửa bí mật 💗</h2>
+
+          <p class="secret-text">
+            Chỉ người đặc biệt mới mở được lời nhắn này.
+          </p>
+
+          <div class="hint-box">
+            <strong>Gợi ý nhỏ:</strong>
+            <span>Mật khẩu gồm 4 chữ số là ngày sinh và tháng sinh.</span>
+            <span>Ví dụ: ngày 12 tháng 11 thì nhập <b>1211</b>.</span>
+        </div>
+        
+
+        <input
+          class="password-input"
+          type="password"
+          id="secretPassword"
+          maxlength="4"
+          inputmode="numeric"
+          placeholder="••••"
+        >
+
+        <p class="password-error" id="passwordError">
+          Rất tiếc bạn không phải người được chọn
+        </p>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary" type="button" id="submitPassword">Mở lời nhắn</button>
+          <button class="btn btn-secondary" type="button" id="backToQuestion">Quay lại</button>
+        </div>
+      </div>
+    </div>
+
       <div class="secret-content" id="honestContent">
         <h2>Gửi một người rất đặc biệt 💗</h2>
         <p class="secret-text">
@@ -1055,7 +1246,12 @@
     <div class="modal-card">
       <button class="close-x" type="button" data-close>×</button>
       <h2>Ngoan ngoãn một chút 😄</h2>
-      <p class="secret-text">Mình ngoan nhất đất Hải Dương hihi.</p>
+      <p class="secret-text">
+        Mình ngoan nhất đất Hải Dương hihi. Không phải kiểu hoàn hảo đâu, chỉ là mình luôn muốn sống tử tế, biết nghĩ cho người khác và không làm ai phải buồn vì mình.
+      </p>
+      <p class="secret-text" style="margin-top: 16px;">
+        Có thể mình hơi ít nói, nhưng nếu đã thương ai thì sẽ rất thật lòng và luôn muốn giữ cho người đó cảm giác an toàn.
+      </p>
       <div class="modal-actions">
         <button class="btn btn-primary" type="button" data-close>Quay lại background</button>
       </div>
@@ -1067,7 +1263,10 @@
       <button class="close-x" type="button" data-close>×</button>
       <h2>Chăm chỉ theo cách hơi lãng mạn 📚</h2>
       <p class="secret-text">
-        Mình đang cố học tiếng Nhật từng ngày. Có lúc tiếng Nhật làm mình áp lực thật, nhưng rồi mình vẫn muốn cố thêm một chút — giống như cách nụ cười của cậu khiến một ngày mệt mỏi của mình trở nên dịu dàng hơn.
+        Mình đang cố học tiếng Nhật từng ngày. Có lúc tiếng Nhật làm mình áp lực thật, có lúc muốn nghỉ một chút, nhưng rồi mình vẫn tự nhắc bản thân phải cố thêm.
+      </p>
+      <p class="secret-text" style="margin-top: 16px;">
+        Không phải vì mình giỏi hơn ai, mà vì mình muốn sau này có thể ổn định hơn, trưởng thành hơn và chăm lo tốt hơn cho người mình thương.
       </p>
       <div class="modal-actions">
         <button class="btn btn-primary" type="button" data-close>Quay lại background</button>
@@ -1077,7 +1276,7 @@
 
   <footer>
     <div class="container">
-      <p>Made with love by Tĩnh An — Phạm Văn Tiến</p>
+      <p>Made with love by Phạm Văn Tiến</p>
       <p>“Nhẹ nhàng, chân thành và luôn cố gắng mỗi ngày.”</p>
     </div>
   </footer>
@@ -1142,8 +1341,15 @@
     const openButtons = document.querySelectorAll("[data-open]");
     const closeButtons = document.querySelectorAll("[data-close]");
     const honestQuestion = document.getElementById("honestQuestion");
+    const passwordBox = document.getElementById("passwordBox");
     const honestContent = document.getElementById("honestContent");
     const agreeHonest = document.getElementById("agreeHonest");
+    const secretPassword = document.getElementById("secretPassword");
+    const submitPassword = document.getElementById("submitPassword");
+    const passwordError = document.getElementById("passwordError");
+    const backToQuestion = document.getElementById("backToQuestion");
+
+    const correctPassword = "1702";
 
     openButtons.forEach((button) => {
       button.addEventListener("click", () => {
@@ -1152,7 +1358,10 @@
 
         if (modalId === "honestModal") {
           honestQuestion.style.display = "block";
+          passwordBox.classList.remove("show");
           honestContent.classList.remove("show");
+          secretPassword.value = "";
+          passwordError.style.display = "none";
         }
 
         modal.classList.add("active");
@@ -1167,7 +1376,100 @@
 
     agreeHonest.addEventListener("click", () => {
       honestQuestion.style.display = "none";
-      honestContent.classList.add("show");
+      passwordBox.classList.add("show");
+      passwordError.style.display = "none";
+      secretPassword.value = "";
+
+      setTimeout(() => {
+        secretPassword.focus();
+      }, 100);
+    });
+
+    submitPassword.addEventListener("click", () => {
+      if (secretPassword.value.trim() === correctPassword) {
+        passwordBox.classList.remove("show");
+        honestContent.classList.add("show");
+      } else {
+        passwordError.style.display = "block";
+      }
+    });
+
+    secretPassword.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        submitPassword.click();
+      }
+    });
+
+    backToQuestion.addEventListener("click", () => {
+      passwordBox.classList.remove("show");
+      honestQuestion.style.display = "block";
+      secretPassword.value = "";
+      passwordError.style.display = "none";
+    });
+
+    const typingText = document.getElementById("typingText");
+    const typingLines = [
+      "Một chàng trai sinh năm 2004...",
+      "Đang sinh sống và làm việc tại Nhật Bản...",
+      "Thích những điều nhẹ nhàng, thật lòng...",
+      "Và vẫn đang cố gắng từng ngày..."
+    ];
+
+    let typingLineIndex = 0;
+    let typingCharIndex = 0;
+    let isDeleting = false;
+
+    function runTypingText() {
+      if (!typingText) return;
+
+      const currentLine = typingLines[typingLineIndex];
+
+      if (isDeleting) {
+        typingCharIndex--;
+      } else {
+        typingCharIndex++;
+      }
+
+      typingText.textContent = currentLine.slice(0, typingCharIndex);
+
+      let speed = isDeleting ? 42 : 75;
+
+      if (!isDeleting && typingCharIndex === currentLine.length) {
+        speed = 1300;
+        isDeleting = true;
+      }
+
+      if (isDeleting && typingCharIndex === 0) {
+        isDeleting = false;
+        typingLineIndex = (typingLineIndex + 1) % typingLines.length;
+        speed = 360;
+      }
+
+      setTimeout(runTypingText, speed);
+    }
+
+    runTypingText();
+
+    const revealItems = document.querySelectorAll("section .card, .timeline-item");
+
+    revealItems.forEach((item, index) => {
+      item.classList.add("reveal");
+      item.style.transitionDelay = `${Math.min(index % 3, 2) * 90}ms`;
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("show");
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.16
+    });
+
+    revealItems.forEach((item) => {
+      revealObserver.observe(item);
     });
 
     document.querySelectorAll(".modal-overlay").forEach((modal) => {
