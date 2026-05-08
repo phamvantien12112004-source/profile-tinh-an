@@ -389,6 +389,23 @@
       margin-bottom: 22px;
     }
 
+    .selected-document {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 8px 15px;
+      border-radius: 999px;
+      color: #be123c;
+      font-weight: 900;
+      background: rgba(255, 241, 242, 0.95);
+      border: 1px solid rgba(244, 114, 182, 0.2);
+    }
+
+    body.dark .selected-document {
+      color: #f9a8d4;
+      background: rgba(51, 65, 85, 0.75);
+      border-color: rgba(249, 168, 212, 0.18);
+    }
+
     .modal-actions {
       display: flex;
       justify-content: center;
@@ -590,9 +607,13 @@
   <div class="modal-overlay" id="confirmModal">
     <div class="modal-card">
       <div class="modal-icon">🌸</div>
-      <h2 id="confirmTitle">Bạn có chắc muốn học không?</h2>
+      <h2>Bạn có chắc muốn học không?</h2>
+
+      <p class="selected-document" id="confirmTitle"></p>
+        Tài liệu học
       <p>
-        Bạn có chắc muốn học không?<br>
+
+      <p>
         File được làm by <strong>Phạm Văn Tiến</strong>.
       </p>
 
