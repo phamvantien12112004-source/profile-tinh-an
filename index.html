@@ -1042,6 +1042,83 @@
       }
     }
 
+    .private-message-box {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      margin: 24px auto 0;
+      padding: 22px;
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(249, 168, 212, 0.18);
+    }
+
+    .private-message-title {
+      color: #f9a8d4 !important;
+      font-size: 17px;
+      font-weight: 900;
+      margin-bottom: 14px;
+      line-height: 1.7;
+    }
+
+    .private-message-textarea {
+      width: 100%;
+      min-height: 120px;
+      resize: vertical;
+      padding: 15px 17px;
+      border-radius: 20px;
+      border: 1px solid rgba(249, 168, 212, 0.32);
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+      line-height: 1.7;
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.09);
+      box-shadow: inset 0 4px 16px rgba(236, 72, 153, 0.08);
+      transition: 0.25s ease;
+    }
+
+    .private-message-textarea:focus {
+      border-color: #ec4899;
+      box-shadow:
+      0 0 0 5px rgba(236, 72, 153, 0.12),
+      inset 0 4px 16px rgba(236, 72, 153, 0.08);
+    }
+
+    .private-message-textarea::placeholder {
+      color: rgba(226, 232, 240, 0.72);
+    }
+
+    .private-message-send {
+      margin-top: 14px;
+    }
+
+    .private-message-status {
+      margin-top: 14px;
+      color: #f9a8d4 !important;
+      font-weight: 900;
+      font-size: 15px;
+    }
+
+    body:not(.dark) .private-message-box {
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    body:not(.dark) .private-message-title,
+    body:not(.dark) .private-message-status {
+      color: #ec4899 !important;
+    }
+
+    body:not(.dark) .private-message-textarea {
+      color: #1f2937;
+      background: rgba(255, 255, 255, 0.78);
+      border-color: rgba(168, 85, 247, 0.22);
+    }
+
+    body:not(.dark) .private-message-textarea::placeholder {
+      color: #9ca3af;
+    }
+
     .visitor-name-input {
       position: relative;
       z-index: 2;
@@ -1366,6 +1443,25 @@
           <p class="answer-result" id="answerResult">
             Chọn một điều bạn cảm nhận được nhé.
           </p>
+        </div>
+
+        <div class="private-message-box">
+          <p class="private-message-title">
+            Bạn có thể gửi tin nhắn riêng đến mình để nói lên cảm nhận của mình.
+          </p>
+
+          <textarea
+             class="private-message-textarea"
+             id="privateMessage"
+             rows="4"
+             placeholder="Nếu có điều gì ngại nói trực tiếp, bạn có thể viết ở đây nhé..."
+          ></textarea>
+
+          <button class="answer-btn private-message-send" type="button" id="sendPrivateMessage">
+            <span>💌</span>
+            Gửi tin nhắn riêng
+          </button>
+          <p class="private-message-status" id="privateMessageStatus"></p>
         </div>
       </div>
     </div>
@@ -1809,6 +1905,9 @@
     const answerButtons = document.querySelectorAll(".answer-btn");
     const answerResult = document.getElementById("answerResult");
     const visitorName = document.getElementById("visitorName");
+    const privateMessage = document.getElementById("privateMessage");
+    const sendPrivateMessage = document.getElementById("sendPrivateMessage");
+    const privateMessageStatus = document.getElementById("privateMessageStatus");
 
     const formspreeEndpoint = "https://formspree.io/f/xwvynrvq";  
 
@@ -1858,6 +1957,50 @@
       } catch (error) {
         console.log("Không gửi được thông báo:", error);
       }
+    }
+
+    async function sendPrivateMessageToFormspree() {
+      const message = privateMessage ? privateMessage.value.trim() : "";
+
+      if (!message) {
+        privateMessageStatus.textContent = "Bạn hãy viết lời nhắn trước khi gửi nhé.";
+        return;
+      }
+
+      const data = {
+        loai_tin_nhan: "Tin nhắn riêng từ profile PVT.dev",
+        ten_nguoi_gui: visitorName ? visitorName.value.trim() || "Ẩn danh" : "Ẩn danh",
+        noi_dung_tin_nhan: message,
+        thoi_gian: new Date().toLocaleString("vi-VN"),
+        trang: window.location.href,
+        trinh_duyet: navigator.userAgent
+      };
+
+      privateMessageStatus.textContent = "Đang gửi tin nhắn...";
+
+      try {
+        const response = await fetch(formspreeEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          privateMessageStatus.textContent = "Mình đã nhận được tin nhắn của bạn rồi 💗";
+          privateMessage.value = "";
+        } else {
+          privateMessageStatus.textContent = "Gửi chưa thành công, bạn thử lại giúp mình nhé.";
+        }
+      } catch (error) {
+        privateMessageStatus.textContent = "Có lỗi khi gửi tin nhắn, bạn thử lại sau nhé.";
+      }
+    }
+
+    if (sendPrivateMessage) {
+      sendPrivateMessage.addEventListener("click", sendPrivateMessageToFormspree);
     }
 
 
