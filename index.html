@@ -558,8 +558,222 @@
       color: var(--pink);
     }
 
+    .visitor-card {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 42px 30px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
+        rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(249, 168, 212, 0.18);
+      box-shadow:
+        0 28px 90px rgba(236, 72, 153, 0.18),
+        inset 0 0 50px rgba(168, 85, 247, 0.08);
+      backdrop-filter: blur(18px);
+    }
 
+    .visitor-card::before,
+    .visitor-card::after {
+      content: "";
+      position: absolute;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      filter: blur(4px);
+      opacity: 0.75;
+      animation: visitorFloat 6s ease-in-out infinite;
+    }
 
+    .visitor-card::before {
+      top: -110px;
+      right: -80px;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.34), transparent 68%);
+    }
+
+    .visitor-card::after {
+      bottom: -120px;
+      left: -80px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.25), transparent 68%);
+      animation-delay: 1.4s;
+    }
+
+    .visitor-glow {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.12) 45%, transparent 70%);
+      transform: translateX(-100%);
+      animation: visitorShine 5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .visitor-icon {
+      width: 76px;
+      height: 76px;
+      margin: 0 auto 18px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      z-index: 2;
+      border-radius: 50%;
+      font-size: 35px;
+      background: linear-gradient(135deg, #fb7185, #c084fc, #38bdf8);
+      box-shadow:
+        0 18px 42px rgba(236, 72, 153, 0.3),
+        0 0 0 8px rgba(255, 255, 255, 0.06);
+      animation: visitorPulse 2.5s ease-in-out infinite;
+    }
+
+    .visitor-card h3 {
+      position: relative;
+      z-index: 2;
+      font-size: clamp(24px, 4vw, 34px);
+      color: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .visitor-question {
+      position: relative;
+      z-index: 2;
+      color: #cbd5e1 !important;
+      font-size: 18px;
+      margin-bottom: 26px;
+    }
+
+    .answer-buttons {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .answer-btn {
+      border: none;
+      cursor: pointer;
+      padding: 14px 19px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(249, 168, 212, 0.22);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+      transition: 0.25s ease;
+    }
+
+    .answer-btn.active {
+      background: linear-gradient(135deg, #fb7185, #c084fc, #38bdf8);
+      box-shadow:
+        0 20px 48px rgba(236, 72, 153, 0.34),
+        0 0 0 5px rgba(249, 168, 212, 0.13);
+      transform: translateY(-4px) scale(1.04);
+    }
+
+    .answer-result-box {
+      position: relative;
+      z-index: 2;
+      max-width: 680px;
+      margin: 24px auto 0;
+      padding: 17px 20px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(249, 168, 212, 0.16);
+    }
+
+    .answer-result {
+      margin: 0;
+      color: #f9a8d4 !important;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.7;
+    }
+
+    .answer-result.changed {
+      animation: answerPop 0.35s ease both;
+    }
+
+    body:not(.dark) .visitor-card {
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.58)),
+        rgba(255, 255, 255, 0.78);
+      border-color: rgba(255, 255, 255, 0.88);
+    }
+
+    body:not(.dark) .visitor-card h3 {
+      color: #1f2937;
+    }
+
+    body:not(.dark) .visitor-question {
+      color: #6b7280 !important;
+    }
+
+    body:not(.dark) .answer-btn {
+      color: #7e22ce;
+      background: rgba(255, 255, 255, 0.75);
+      border-color: rgba(168, 85, 247, 0.2);
+    }
+
+    body:not(.dark) .answer-result-box {
+      background: rgba(255, 255, 255, 0.68);
+    }
+
+    body:not(.dark) .answer-result {
+      color: #ec4899 !important;
+    }
+
+    @keyframes visitorFloat {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(18px) scale(1.06);
+      }
+    }
+
+    @keyframes visitorShine {
+      0%, 72% {
+        transform: translateX(-120%);
+      }
+      100% {
+        transform: translateX(120%);
+      }
+    }
+
+    @keyframes visitorPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          0 18px 42px rgba(236, 72, 153, 0.3),
+          0 0 0 8px rgba(255, 255, 255, 0.06);
+      }
+      50% {
+        transform: scale(1.06);
+        box-shadow:
+          0 24px 58px rgba(236, 72, 153, 0.42),
+          0 0 0 13px rgba(249, 168, 212, 0.08);
+      }
+    }
+
+    @keyframes answerPop {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
     .bg-hearts {
       position: fixed;
       inset: 0;
@@ -828,6 +1042,49 @@
       }
     }
 
+    .visitor-name-input {
+      position: relative;
+      z-index: 2;
+      width: min(360px, 100%);
+      margin: 0 auto 24px;
+      display: block;
+      padding: 14px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(249, 168, 212, 0.32);
+      outline: none;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 800;
+      font-family: inherit;
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.09);
+      box-shadow: inset 0 4px 16px rgba(236, 72, 153, 0.08);
+      transition: 0.25s ease;
+    }
+
+    .visitor-name-input:focus {
+      border-color: #ec4899;
+      box-shadow:
+        0 0 0 5px rgba(236, 72, 153, 0.12),
+        inset 0 4px 16px rgba(236, 72, 153, 0.08);
+    }
+
+    .visitor-name-input::placeholder {
+       color: rgba(226, 232, 240, 0.72);
+    }
+
+    body:not(.dark) .visitor-name-input {
+      color: #1f2937;
+      background: rgba(255, 255, 255, 0.78);
+      border-color: rgba(168, 85, 247, 0.22);
+    }
+
+    body:not(.dark) .visitor-name-input::placeholder {
+      color: #9ca3af;
+    }
+    
+
+
     @media (max-width: 900px) {
       .topbar-container {
         flex-wrap: wrap;
@@ -883,6 +1140,7 @@
         <a href="#about">Về mình</a>
         <a href="#little-things">Điều nhỏ</a>
         <a href="#today-note">Hôm nay</a>
+        <a href="japanese.html">Học tiếng Nhật</a>
         <a href="#skills">Kỹ năng</a>
         <a href="#projects">Dự án</a>
         <a href="#social">Mạng XH</a>
@@ -909,7 +1167,8 @@
         </p>
         <div class="buttons">
           <a class="btn btn-primary" href="#about">Tìm hiểu về mình</a>
-          <a class="btn btn-secondary" href="#social">Kết nối với mình</a>
+          <a class="btn btn-primary" href="#social">Kết nối với mình</a>
+          <a class="btn btn-primary" href="japanese.html">Học tiếng Nhật cùng mình</a>
         </div>
       </div>
     </div>
@@ -1051,6 +1310,62 @@
           <div class="icon">✨</div>
           <h3>Chân thành</h3>
           <p>Mình trân trọng sự thật lòng. Với mình, một mối quan hệ đẹp không cần quá hoàn hảo, chỉ cần đủ chân thành và biết nghĩ cho nhau.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="viewer-question">
+    <div class="container">
+      <div class="section-title">
+        <span>For visitor</span>
+        <h2>Một câu hỏi nhỏ cho người xem</h2>
+      </div>
+
+      <div class="visitor-card">
+        <div class="visitor-glow"></div>
+
+        <div class="visitor-icon">💌</div>
+
+        <h3>Nếu bạn đang xem profile này...</h3>
+
+        <p class="visitor-question">
+          Bạn nghĩ mình là một người như thế nào?
+        </p>
+
+        <input
+          class="visitor-name-input"
+          type="text"
+          id="visitorName"
+          placeholder="Tên của bạn nếu muốn..."
+        >
+
+        <div class="answer-buttons">
+          <button class="answer-btn" type="button" data-answer="cute">
+            <span>🌸</span>
+            Dễ thương
+          </button>
+          
+          <button class="answer-btn" type="button" data-answer="honest">
+            <span>🤍</span>
+            Chân thành
+          </button>
+
+          <button class="answer-btn" type="button" data-answer="quiet">
+            <span>🌙</span>
+            Trầm tính
+          </button>
+
+          <button class="answer-btn" type="button" data-answer="try">
+            <span>🔥</span>
+            Biết cố gắng
+          </button>
+        </div>
+
+        <div class="answer-result-box">
+          <p class="answer-result" id="answerResult">
+            Chọn một điều bạn cảm nhận được nhé.
+          </p>
         </div>
       </div>
     </div>
@@ -1479,6 +1794,85 @@
         }
       });
     });
+
+    const answerButtons = document.querySelectorAll(".answer-btn");
+    const answerResult = document.getElementById("answerResult");
+    const visitorName = document.getElementById("visitorName");
+
+    const formspreeEndpoint = "https://formspree.io/f/xwvynrvq";  
+
+    const answerMessages = {
+      cute: "Cảm ơn nhé 🌸 Nghe chữ “dễ thương” tự nhiên thấy ngày hôm nay nhẹ nhàng hơn một chút.",
+      honest: "Cảm ơn vì đã cảm nhận được điều đó 🤍 Mình không hoàn hảo, nhưng mình luôn muốn giữ sự chân thành trong cách đối xử với mọi người.",
+      quiet: "Đúng là mình hơi trầm một chút 🌙 Nhưng đôi khi im lặng không phải vì lạnh lùng, mà vì mình đang giữ nhiều điều trong lòng.",
+      try: "Cảm ơn vì đã nhìn thấy sự cố gắng của mình 🔥 Có thể mình chưa giỏi, nhưng mình vẫn muốn tốt hơn từng ngày."
+    };
+
+    const answerLabels = {
+      cute: "Dễ thương",
+      honest: "Chân thành",
+      quiet: "Trầm tính",
+      try: "Biết cố gắng"
+    };
+
+    async function sendVisitorReaction(answer) {
+      if (!formspreeEndpoint || formspreeEndpoint.includes("DAN_LINK_FORMSPREE")) {
+        console.log("Bạn chưa gắn link Formspree.");
+        return;
+      }
+
+      const data = {
+        ten_nguoi_xem: visitorName ? visitorName.value.trim() || "Không nhập tên" : "Không nhập tên",
+        cam_nhan: answerLabels[answer],
+        thoi_gian: new Date().toLocaleString("vi-VN"),
+        trang: window.location.href,
+        trinh_duyet: navigator.userAgent
+      };
+
+      try {
+        const response = await fetch(formspreeEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          console.log("Đã gửi cảm nhận về Formspree:", data);
+        } else {
+          console.log("Formspree chưa nhận được. Mã lỗi:", response.status);
+        }
+      } catch (error) {
+        console.log("Không gửi được thông báo:", error);
+      }
+    }
+
+
+    answerButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        console.log("Đã bấm nút đánh giá");
+
+        const answer = button.getAttribute("data-answer");
+
+        answerButtons.forEach((item) => {
+          item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        answerResult.classList.remove("changed");
+        answerResult.textContent = answerMessages[answer];
+
+        setTimeout(() => {
+          answerResult.classList.add("changed");
+        }, 10);
+
+        sendVisitorReaction(answer);
+      });
+    });
+
   </script>
 </body>
 </html>
