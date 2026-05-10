@@ -38,6 +38,9 @@
       min-height: 100vh;
       line-height: 1.7;
       transition: background 0.35s ease, color 0.35s ease;
+
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     body::before {
@@ -142,6 +145,14 @@
       width: 0;
       height: 0;
     }
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      -webkit-user-select: text;
+      user-select: text;
+    }
+    
 
     .slider {
       position: absolute;
@@ -858,6 +869,7 @@
       width: min(720px, 100%);
       max-height: 88vh;
       overflow: hidden;
+      overflow-y: auto;
       text-align: center;
       padding: 40px 28px;
       border-radius: 34px;
@@ -1159,7 +1171,568 @@
     body:not(.dark) .visitor-name-input::placeholder {
       color: #9ca3af;
     }
-    
+
+    .secret-scene {
+      position: relative;
+      z-index: 2;
+      min-height: 430px;
+      overflow: hidden;
+      border-radius: 28px;
+      padding: 26px 18px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255, 182, 193, 0.28), transparent 28%),
+        radial-gradient(circle at 80% 30%, rgba(216, 180, 254, 0.25), transparent 30%),
+        linear-gradient(180deg, rgba(255, 241, 245, 0.72), rgba(253, 242, 248, 0.34));
+    }
+
+    body.dark .secret-scene {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.18), transparent 28%),
+        radial-gradient(circle at 80% 30%, rgba(216, 180, 254, 0.25), transparent 30%),
+        linear-gradient(180deg, rgba(255, 241, 245, 0.72), rgba(253, 242, 248, 0.34));
+    }
+
+    body.dark .secret-scene {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.18), transparent 28%),
+        radial-gradient(circle at 80% 30%, rgba(168, 85, 247, 0.18), transparent 30%),
+        linear-gradient(180deg, rgba(30, 41, 59, 0.72), rgba(15, 23, 42, 0.48));
+    }
+
+    .secret-stage {
+      display: none;
+      position: relative;
+      z-index: 3;
+      min-height: 390px;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .secret-stage.active {
+      display: flex;
+      animation: secretFade 0.45s ease both;
+    }
+
+    @keyframes secretFade {
+      from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Mây hồng trái tim */
+    .pink-cloud {
+      position: absolute;
+      width: 160px;
+      height: 54px;
+      border-radius: 999px;
+      background: rgba(244, 114, 182, 0.28);
+      filter: blur(0.2px);
+      animation: cloudMove 12s linear infinite;
+      opacity: 0.75;
+    }
+
+    .pink-cloud::before,
+    .pink-cloud::after {
+      content: "❤";
+      position: absolute;
+      color: rgba(236, 72, 153, 0.5);
+      font-size: 24px;
+      animation: heartBlink 2.2s ease-in-out infinite;
+    }
+
+    .pink-cloud::before {
+      left: 28px;
+      top: -14px;
+    }
+
+    .pink-cloud::after {
+      right: 32px;
+      top: -20px;
+      animation-delay: 0.6s;
+    }
+
+    .cloud-1 {
+      left: -180px;
+      bottom: 54px;
+    }
+
+    .cloud-2 {
+      right: -180px;
+      top: 72px;
+      animation-delay: -4s;
+      animation-direction: reverse;
+    }
+
+    .cloud-3 {
+      left: 12%;
+      bottom: 6px;
+      width: 220px;
+      animation-duration: 16s;
+      animation-delay: -7s;
+    }
+
+    @keyframes cloudMove {
+      from {
+        transform: translateX(-40px);
+      }
+      to {
+        transform: translateX(720px);
+      }
+    }
+
+
+    @keyframes heartBlink {
+      0%, 100% {
+        opacity: 0.35;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    /* Hộp quà */
+    .gift-title {
+      margin-bottom: 18px;
+      color: #be185d;
+      font-size: clamp(24px, 5vw, 38px);
+      font-family: "Segoe Script", "Brush Script MT", cursive;
+      animation: cuteText 1.5s ease-in-out infinite;
+    }
+
+    body.dark .gift-title {
+      color: #f9a8d4;
+    }
+
+    .gift-box {
+      position: relative;
+      width: 180px;
+      height: 160px;
+      cursor: pointer;
+      animation: giftBounce 1.45s ease-in-out infinite;
+      filter: drop-shadow(0 22px 32px rgba(236, 72, 153, 0.25));
+    }
+
+    .gift-lid {
+      position: absolute;
+      left: 14px;
+      top: 20px;
+      width: 152px;
+      height: 44px;
+      border-radius: 18px 18px 8px 8px;
+      background: linear-gradient(135deg, #fb7185, #e11d48);
+      z-index: 3;
+      transition: 0.45s ease;
+    }
+
+    .gift-body {
+      position: absolute;
+      left: 24px;
+      top: 58px;
+      width: 132px;
+      height: 102px;
+      border-radius: 14px 14px 24px 24px;
+      background: linear-gradient(135deg, #fb7185, #e11d48);
+      z-index: 2;
+    }
+
+    .gift-ribbon-v {
+      position: absolute;
+      left: 78px;
+      top: 20px;
+      width: 24px;
+      height: 140px;
+      background: linear-gradient(180deg, #fde047, #facc15);
+      z-index: 4;
+    }
+
+    .gift-ribbon-h {
+      position: absolute;
+      left: 18px;
+      top: 74px;
+      width: 144px;
+      height: 22px;
+      background: linear-gradient(90deg, #fde047, #facc15);
+      z-index: 5;
+    }
+
+    .gift-bow-left,
+    .gift-bow-right {
+      position: absolute;
+      top: 0;
+      width: 62px;
+      height: 48px;
+      border-radius: 999px 999px 18px 999px;
+      background: #fde047;
+      z-index: 6;
+    }
+
+    .gift-bow-left {
+      left: 30px;
+      transform: rotate(25deg);
+    }
+
+    .gift-bow-right {
+      right: 30px;
+      transform: scaleX(-1) rotate(25deg);
+    }
+
+    .gift-box.open .gift-lid {
+      transform: translateY(-70px) rotate(-12deg);
+      opacity: 0;
+    }
+
+    .gift-box.open .gift-bow-left {
+      transform: translate(-38px, -60px) rotate(-35deg);
+      opacity: 0;
+    }
+
+    .gift-box.open .gift-bow-right {
+      transform: translate(38px, -60px) scaleX(-1) rotate(-35deg);
+      opacity: 0;
+    }
+
+    .gift-box.open .gift-body {
+      animation: giftOpenGlow 0.8s ease both;
+    }
+
+    .gift-hint {
+      margin-top: 20px;
+      color: var(--text-soft);
+      font-weight: 800;
+    }
+
+    @keyframes giftBounce {
+      0%, 100% {
+        transform: translateY(0) rotate(-1deg);
+      }
+      50% {
+        transform: translateY(-12px) rotate(1deg);
+      }
+    }
+
+    @keyframes giftOpenGlow {
+      0% {
+        box-shadow: 0 0 0 rgba(236, 72, 153, 0);
+      }
+      100% {
+        box-shadow: 0 0 70px rgba(236, 72, 153, 0.65);
+      }
+    }
+
+    @keyframes cuteText {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.85;
+      }
+      50% {
+        transform: scale(1.04);
+        opacity: 1;
+      }
+    }
+
+    /* Gấu viết thư */
+    .bear-message {
+      min-width: 230px;
+      margin-bottom: 20px;
+      padding: 13px 22px;
+      border-radius: 999px;
+      color: #be185d;
+      font-family: "Segoe Script", "Brush Script MT", cursive;
+      font-size: 22px;
+      font-weight: 900;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 12px 30px rgba(236, 72, 153, 0.18);
+      animation: messagePop 0.55s ease both;
+    }
+
+    body.dark .bear-message {
+      color: #f9a8d4;
+      background: rgba(30, 41, 59, 0.92);
+    }
+
+    .bear {
+      position: relative;
+      width: 210px;
+      height: 260px;
+      animation: bearWiggle 1.2s ease-in-out infinite;
+    }
+
+    .bear-head {
+      position: absolute;
+      left: 28px;
+      top: 0;
+      width: 154px;
+      height: 142px;
+      border-radius: 48% 48% 44% 44%;
+      background: #ffffff;
+      border: 6px solid #111827;
+      z-index: 3;
+    }
+
+    .bear-ear {
+      position: absolute;
+      top: -14px;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 6px solid #111827;
+      z-index: 2;
+    }
+
+    .bear-ear.left {
+      left: 18px;
+    }
+
+    .bear-ear.right {
+      right: 18px;
+    }
+
+    .bear-eye {
+      position: absolute;
+      top: 62px;
+      width: 12px;
+      height: 16px;
+      border-radius: 50%;
+      background: #111827;
+      z-index: 4;
+    }
+
+    .bear-eye.left {
+      left: 76px;
+    }
+
+    .bear-eye.right {
+      right: 76px;
+    }
+
+    .bear-nose {
+      position: absolute;
+      left: 96px;
+      top: 83px;
+      width: 18px;
+      height: 13px;
+      border-radius: 50%;
+      background: #111827;
+      z-index: 4;
+    }
+
+    .bear-mouth {
+      position: absolute;
+      left: 108px;
+      top: 101px;
+      width: 18px;
+      height: 18px;
+      border-right: 4px solid #111827;
+      border-bottom: 4px solid #111827;
+      border-radius: 0 0 18px 0;
+      transform: rotate(35deg);
+      z-index: 4;
+    }
+
+    .bear-body {
+      position: absolute;
+      left: 20px;
+      top: 96px;
+      width: 170px;
+      height: 158px;
+      border-radius: 52px 52px 46px 46px;
+      background: #ffffff;
+      border: 6px solid #111827;
+      z-index: 1;
+    }
+
+    .bear-paper {
+      position: absolute;
+      left: 64px;
+      top: 118px;
+      width: 82px;
+      height: 98px;
+      border-radius: 10px;
+      background: #67e8f9;
+      border: 5px solid #111827;
+      z-index: 5;
+      animation: paperWrite 0.5s ease-in-out infinite;
+    }
+
+    .bear-hand {
+      position: absolute;
+      top: 136px;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 5px solid #111827;
+      z-index: 6;
+    }
+
+    .bear-hand.left {
+      left: 28px;
+      animation: handWrite 0.45s ease-in-out infinite;
+    }
+
+    .bear-hand.right {
+      right: 28px;
+    }
+
+    .bear-foot {
+      position: absolute;
+      bottom: 0;
+      width: 54px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 5px solid #111827;
+      z-index: 6;
+    }
+
+    .bear-foot.left {
+      left: 50px;
+    }
+
+    .bear-foot.right {
+      right: 50px;
+    }
+
+    .write-dots {
+      margin-top: 14px;
+      color: var(--text-soft);
+      font-weight: 800;
+    }
+
+    .write-dots span {
+      display: inline-block;
+      animation: dotJump 0.9s ease-in-out infinite;
+    }
+
+    .write-dots span:nth-child(2) {
+      animation-delay: 0.16s;
+    }
+
+    .write-dots span:nth-child(3) {
+      animation-delay: 0.32s;
+    }
+
+    @keyframes bearWiggle {
+      0%, 100% {
+        transform: rotate(-1deg);
+      }
+      50% {
+        transform: rotate(1deg);
+      }
+    }
+
+    @keyframes handWrite {
+      0%, 100% {
+        transform: translateX(0) rotate(0);
+      }
+      50% {
+        transform: translateX(8px) rotate(8deg);
+      }
+    }
+
+    @keyframes paperWrite {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(3px);
+      }
+    }
+
+    @keyframes dotJump {
+      0%, 100% {
+        transform: translateY(0);
+        opacity: 0.35;
+      }
+      50% {
+        transform: translateY(-8px);
+        opacity: 1;
+      }
+    }
+
+    @keyframes messagePop {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* Lá thư */
+    .letter-paper {
+      position: relative;
+      width: min(610px, 100%);
+      max-height: 58vh;
+      overflow-y: auto;
+      padding: 34px 26px;
+      border-radius: 28px;
+      background:
+        linear-gradient(rgba(255,255,255,0.82), rgba(255,255,255,0.82)),
+        repeating-linear-gradient(180deg, transparent 0 34px, rgba(236, 72, 153, 0.13) 35px 36px);
+      border: 2px solid rgba(236, 72, 153, 0.22);
+      box-shadow: 0 28px 80px rgba(236, 72, 153, 0.22);
+      animation: letterOpen 0.7s ease both;
+    }
+
+    body.dark .letter-paper {
+      background:
+        linear-gradient(rgba(30,41,59,0.88), rgba(30,41,59,0.88)),
+        repeating-linear-gradient(180deg, transparent 0 34px, rgba(249, 168, 212, 0.12) 35px 36px);
+    }
+
+    .letter-heart-pin {
+      position: absolute;
+      left: 50%;
+      top: -24px;
+      transform: translateX(-50%);
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: linear-gradient(135deg, #fb7185, #ec4899);
+      box-shadow: 0 14px 28px rgba(236, 72, 153, 0.28);
+      font-size: 24px;
+    }
+
+    .letter-paper h2 {
+      margin-top: 16px;
+      color: #be185d;
+      font-family: "Segoe Script", "Brush Script MT", cursive;
+    }
+
+    body.dark .letter-paper h2 {
+      color: #f9a8d4;
+    }
+
+    .letter-paper .secret-text {
+      color: var(--text-soft);
+    }
+
+    @keyframes letterOpen {
+      from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.9) rotateX(25deg);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotateX(0);
+      }
+    }
 
 
     @media (max-width: 900px) {
@@ -1584,42 +2157,47 @@
   </div>
 
   <div class="modal-overlay" id="honestModal">
-    <div class="modal-card">
-      <button class="close-x" type="button" data-close>×</button>
-      <div class="heart-field">
-        <span class="heart">💗</span>
-        <span class="heart">💖</span>
-        <span class="heart">💕</span>
-        <span class="heart">💘</span>
-        <span class="heart">💞</span>
-        <span class="heart">💓</span>
+  <div class="modal-card">
+    <button class="close-x" type="button" data-close>×</button>
+
+    <div class="heart-field">
+      <span class="heart">💗</span>
+      <span class="heart">💖</span>
+      <span class="heart">💕</span>
+      <span class="heart">💘</span>
+      <span class="heart">💞</span>
+      <span class="heart">💓</span>
+    </div>
+
+    <div id="honestQuestion">
+      <h2>Một điều khá chân thành...</h2>
+      <p>Cậu có chắc là muốn xem điều này không?</p>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" type="button" id="agreeHonest">
+          Bạn có đồng ý xem không
+        </button>
+        <button class="btn btn-secondary" type="button" data-close>
+          Bạn có quyền từ chối
+        </button>
       </div>
+    </div>
 
-      <div id="honestQuestion">
-        <h2>Một điều khá chân thành...</h2>
-        <p>Cậu có chắc là muốn xem điều này không?</p>
-        <div class="modal-actions">
-          <button class="btn btn-primary" type="button" id="agreeHonest">Bạn có đồng ý xem không</button>
-          <button class="btn btn-secondary" type="button" data-close>Bạn có quyền từ chối</button>
+    <div class="secret-content" id="passwordBox">
+      <div class="password-card">
+        <div class="lock-icon">🔐</div>
+
+        <h2>Cánh cửa bí mật 💗</h2>
+
+        <p class="secret-text">
+          Chỉ người đặc biệt mới mở được lời nhắn này.
+        </p>
+
+        <div class="hint-box">
+          <strong>Gợi ý nhỏ:</strong>
+          <span>Mật khẩu gồm 4 chữ số là ngày sinh và tháng sinh.</span>
+          <span>Ví dụ: ngày 12 tháng 11 thì nhập <b>1211</b>.</span>
         </div>
-      </div>
-
-      <div class="secret-content" id="passwordBox">
-        <div class="password-card">
-          <div class="lock-icon">🔐</div>
-
-          <h2>Cánh cửa bí mật 💗</h2>
-
-          <p class="secret-text">
-            Chỉ người đặc biệt mới mở được lời nhắn này.
-          </p>
-
-          <div class="hint-box">
-            <strong>Gợi ý nhỏ:</strong>
-            <span>Mật khẩu gồm 4 chữ số là ngày sinh và tháng sinh.</span>
-            <span>Ví dụ: ngày 12 tháng 11 thì nhập <b>1211</b>.</span>
-        </div>
-        
 
         <input
           class="password-input"
@@ -1635,35 +2213,97 @@
         </p>
 
         <div class="modal-actions">
-          <button class="btn btn-primary" type="button" id="submitPassword">Mở lời nhắn</button>
-          <button class="btn btn-secondary" type="button" id="backToQuestion">Quay lại</button>
+          <button class="btn btn-primary" type="button" id="submitPassword">
+            Mở lời nhắn
+          </button>
+          <button class="btn btn-secondary" type="button" id="backToQuestion">
+            Quay lại
+          </button>
         </div>
       </div>
     </div>
 
-      <div class="secret-content" id="honestContent">
-        <h2>Gửi một người rất đặc biệt 💗</h2>
-        <p class="secret-text">
-           Hì hì, hú oàaa... chắc cậu bất ngờ lắm đúng không?
-           Thật ra mình thích cậu cũng lâu rồi. Mình vẫn nhớ lần đầu gặp cậu,
-           là vào buổi khám sức khỏe đầu tiên của năm nhất ở trường.
-           <br><br>
-           Cậu không cần phải là người nổi bật nhất giữa đám đông,
-           cũng không cần xinh đẹp đến mức khiến ai cũng phải ngoái nhìn.
-           Nhưng ở cậu có một điều gì đó rất riêng, rất nhẹ:
-           vẻ đẹp của tri thức, của sự dịu dàng, và của cách cậu khiến lòng mình
-           thấy bình yên hơn mỗi khi nghĩ đến.
-           <br><br>
-           Có lẽ chính sự nhẹ nhàng ấy đã làm mình thích cậu từ lúc nào không hay.
-           Ban đầu chỉ là một chút chú ý, rồi dần dần thành một cảm giác rất khó gọi tên.
-        </p>
-        <div class="modal-actions">
-          <button class="btn btn-primary" type="button" data-close>Quay lại background</button>
+    <div class="secret-content" id="honestContent">
+      <div class="secret-scene">
+
+        <div class="pink-cloud cloud-1"></div>
+        <div class="pink-cloud cloud-2"></div>
+        <div class="pink-cloud cloud-3"></div>
+
+        <div class="secret-stage active" id="giftStage">
+          <h2 class="gift-title">Nhấn vào hộp quà</h2>
+
+          <div class="gift-box" id="secretGift">
+            <div class="gift-bow-left"></div>
+            <div class="gift-bow-right"></div>
+            <div class="gift-lid"></div>
+            <div class="gift-body"></div>
+            <div class="gift-ribbon-v"></div>
+            <div class="gift-ribbon-h"></div>
+          </div>
+
+          <p class="gift-hint">Có một điều nhỏ đang đợi cậu mở ra đó 💗</p>
         </div>
+
+        <div class="secret-stage" id="bearStage">
+          <div class="bear-message" id="bearMessage">Đợi tớ một chút...</div>
+
+          <div class="bear">
+            <div class="bear-ear left"></div>
+            <div class="bear-ear right"></div>
+            <div class="bear-head"></div>
+            <div class="bear-eye left"></div>
+            <div class="bear-eye right"></div>
+            <div class="bear-nose"></div>
+            <div class="bear-mouth"></div>
+            <div class="bear-body"></div>
+            <div class="bear-paper"></div>
+            <div class="bear-hand left"></div>
+            <div class="bear-hand right"></div>
+            <div class="bear-foot left"></div>
+            <div class="bear-foot right"></div>
+          </div>
+
+          <div class="write-dots">
+            Tớ đang viết thư cho cậu hihi
+            <span>.</span><span>.</span><span>.</span>
+          </div>
+        </div>
+
+        <div class="secret-stage" id="letterStage">
+          <div class="letter-paper">
+            <div class="letter-heart-pin">❤</div>
+
+            <h2>Gửi một người rất đặc biệt 💗</h2>
+
+            <p class="secret-text">
+              Hì hì, hú oàaa... chắc cậu bất ngờ lắm đúng không?
+              Thật ra mình thích cậu cũng lâu rồi. Mình vẫn nhớ lần đầu gặp cậu,
+              là vào buổi khám sức khỏe đầu tiên của năm nhất ở trường.
+              <br><br>
+              Cậu không cần phải là người nổi bật nhất giữa đám đông,
+              cũng không cần xinh đẹp đến mức khiến ai cũng phải ngoái nhìn.
+              Nhưng ở cậu có một điều gì đó rất riêng, rất nhẹ:
+              vẻ đẹp của tri thức, của sự dịu dàng, và của cách cậu khiến lòng mình
+              thấy bình yên hơn mỗi khi nghĩ đến.
+              <br><br>
+              Có lẽ chính sự nhẹ nhàng ấy đã làm mình thích cậu từ lúc nào không hay.
+              Ban đầu chỉ là một chút chú ý, rồi dần dần thành một cảm giác rất khó gọi tên.
+            </p>
+
+            <div class="modal-actions">
+              <button class="btn btn-primary" type="button" data-close>
+                Quay lại background
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
+
   </div>
-
+</div>
   <div class="modal-overlay" id="goodModal">
     <div class="modal-card">
       <button class="close-x" type="button" data-close>×</button>
@@ -1810,7 +2450,7 @@
     submitPassword.addEventListener("click", () => {
       if (secretPassword.value.trim() === correctPassword) {
         passwordBox.classList.remove("show");
-        honestContent.classList.add("show");
+        startSecretGiftStory();
       } else {
         passwordError.style.display = "block";
       }
@@ -2027,6 +2667,117 @@
       });
     });
 
-  </script>
+    const giftStage = document.getElementById("giftStage");
+    const bearStage = document.getElementById("bearStage");
+    const letterStage = document.getElementById("letterStage");
+    const secretGift = document.getElementById("secretGift");
+    const bearMessage = document.getElementById("bearMessage");
+
+    const bearMessages = [
+      "Đợi tớ một chút...",
+      "Tớ đang viết thư cho cậu nè...",
+      "Sắp xong rồi đó...",
+      "Chuẩn bị mở thư nha 💗"
+    ];
+
+    let bearMessageTimer;
+    let letterTimer;
+    function startSecretGiftStory() {
+      honestContent.classList.add("show");
+
+      if (giftStage) giftStage.classList.add("active");
+      if (bearStage) bearStage.classList.remove("active");
+      if (letterStage) letterStage.classList.remove("active");
+
+      if (secretGift) {
+        secretGift.classList.remove("open");
+      }
+
+      clearInterval(bearMessageTimer);
+      clearTimeout(letterTimer);
+    }
+
+    if (secretGift) {
+      secretGift.addEventListener("click", () => {
+        secretGift.classList.add("open");
+
+        setTimeout(() => {
+          if (giftStage) giftStage.classList.remove("active");
+          if (bearStage) bearStage.classList.add("active");
+
+          let index = 0;
+          if (bearMessage) {
+            bearMessage.textContent = bearMessages[index];
+          }
+
+          bearMessageTimer = setInterval(() => {
+            index++;
+
+            if (index < bearMessages.length) {
+              if (bearMessage) bearMessage.textContent = bearMessages[index];
+            } else {
+              clearInterval(bearMessageTimer);
+            }
+          }, 1200);
+
+          letterTimer = setTimeout(() => {
+            if (bearStage) bearStage.classList.remove("active");
+            if (letterStage) letterStage.classList.add("active");
+          }, 5200);
+        }, 900);
+      });
+    }
+
+      (function () {
+        document.addEventListener("contextmenu", function (e) {
+          e.preventDefault();
+          showProtectMessage();
+        });
+
+        document.addEventListener("keydown", function (e) {
+          const key = e.key.toLowerCase();
+
+          if (
+            e.key === "F12" ||
+            (e.ctrlKey && e.shiftKey && ["i", "j", "c"].includes(key)) ||
+            (e.ctrlKey && key === "u") ||
+            (e.ctrlKey && key === "s")
+          ) {
+            e.preventDefault();
+            showProtectMessage();
+          }
+        });
+
+        function showProtectMessage() {
+          let box = document.getElementById("protectMessage");
+
+          if (!box) {
+            box = document.createElement("div");
+            box.id = "protectMessage";
+            box.innerText = "Đừng xem code của Tiến nha 😄";
+            box.style.position = "fixed";
+            box.style.left = "50%";
+            box.style.top = "20px";
+            box.style.transform = "translateX(-50%)";
+            box.style.zIndex = "999999";
+            box.style.padding = "12px 18px";
+            box.style.borderRadius = "999px";
+            box.style.background = "rgba(255, 255, 255, 0.92)";
+            box.style.color = "#ff5f9e";
+            box.style.fontWeight = "700";
+            box.style.boxShadow = "0 12px 35px rgba(0,0,0,0.18)";
+            box.style.backdropFilter = "blur(12px)";
+            box.style.fontFamily = "Arial, sans-serif";
+            document.body.appendChild(box);
+          }
+
+          box.style.display = "block";
+          clearTimeout(window.protectTimer);
+          window.protectTimer = setTimeout(function () {
+            box.style.display = "none";
+          }, 1800);
+        }
+      })();
+    </script>
 </body>
 </html>
