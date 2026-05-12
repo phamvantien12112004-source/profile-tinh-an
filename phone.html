@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Điện thoại của Tiến</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.35), transparent 30%),
+        radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.35), transparent 30%),
+        linear-gradient(135deg, #0f172a, #312e81, #701a75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: white;
+    }
+
+    .back-home {
+      position: fixed;
+      top: 22px;
+      left: 22px;
+      text-decoration: none;
+      color: white;
+      font-weight: 800;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(14px);
+      z-index: 20;
+    }
+
+    .iphone {
+      width: min(430px, 94vw);
+      height: min(900px, 94vh);
+      padding: 14px;
+      border-radius: 58px;
+      background: linear-gradient(145deg, #111827, #020617);
+      box-shadow:
+        0 40px 100px rgba(0, 0, 0, 0.5),
+        inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .iphone::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border-radius: 52px;
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      border-radius: 45px;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 30% 15%, rgba(255, 255, 255, 0.28), transparent 24%),
+        radial-gradient(circle at 75% 35%, rgba(236, 72, 153, 0.55), transparent 28%),
+        radial-gradient(circle at 35% 82%, rgba(56, 189, 248, 0.55), transparent 30%),
+        linear-gradient(160deg, #1e1b4b, #831843, #0f172a);
+    }
+
+    .dynamic-island {
+      position: absolute;
+      top: 13px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 126px;
+      height: 35px;
+      background: #020617;
+      border-radius: 999px;
+      z-index: 5;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .status-bar {
+      height: 38px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 800;
+      padding: 0 8px;
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 6;
+    }
+
+    .home-title {
+      margin-top: 22px;
+      margin-bottom: 18px;
+    }
+
+    .home-title h1 {
+      font-size: 28px;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .home-title p {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 14px;
+    }
+
+    .apps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px 12px;
+      margin-top: 18px;
+    }
+
+    .app {
+      border: none;
+      background: transparent;
+      color: white;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .app-icon.profile {
+  background: linear-gradient(135deg, #f9a8d4, #a855f7);
+}
+
+.app-icon.japanese {
+  background: linear-gradient(135deg, #fda4af, #f0abfc);
+}
+
+.app-icon.music {
+  background: linear-gradient(135deg, #fb7185, #f97316);
+}
+
+.app-icon.gallery {
+  background: linear-gradient(135deg, #38bdf8, #22c55e);
+}
+
+.app-icon.love {
+  background: linear-gradient(135deg, #ec4899, #be185d);
+}
+
+.app-icon.notes {
+  background: linear-gradient(135deg, #facc15, #fb923c);
+}
+
+.app-icon.line {
+  background: linear-gradient(135deg, #06c755, #16a34a);
+}
+
+.app-icon.facebook {
+  background: linear-gradient(135deg, #1877f2, #2563eb);
+}
+
+.app-icon.messenger {
+  background: linear-gradient(135deg, #00b2ff, #7c3aed, #ff2d75);
+}
+
+.app-icon.tiktok {
+  background: linear-gradient(135deg, #020617, #111827);
+}
+
+.app-icon.instagram {
+  background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af, #515bd4);
+}
+
+.app-icon.soundcloud {
+  background: linear-gradient(135deg, #ff7700, #fb923c);
+}
+
+.app-icon.zalo {
+  background: linear-gradient(135deg, #0068ff, #38bdf8);
+}
+
+.app-icon.settings {
+  background: linear-gradient(135deg, #64748b, #334155);
+}
+
+.app-icon.camera {
+  background: linear-gradient(135deg, #e5e7eb, #64748b);
+}
+    .app-icon {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 18px;
+  font-size: 22px;
+  font-weight: 950;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(14px);
+  transition: 0.2s ease;
+}
+
+    .app span {
+      font-size: 12px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+    }
+
+    .dock {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 18px;
+      height: 88px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      backdrop-filter: blur(20px);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      place-items: center;
+      z-index: 3;
+    }
+
+    .dock button {
+      width: 58px;
+      height: 58px;
+      border: none;
+      border-radius: 18px;
+      font-size: 27px;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.86);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .app-window {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      padding: 22px;
+      background: rgba(15, 23, 42, 0.96);
+      transform: translateY(110%);
+      transition: 0.35s ease;
+      border-radius: 45px;
+    }
+
+    .app-window.active {
+      transform: translateY(0);
+    }
+
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 28px;
+      margin-bottom: 24px;
+    }
+
+    .app-header h2 {
+      font-size: 24px;
+    }
+
+    .close-app {
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: white;
+      background: rgba(255, 255, 255, 0.16);
+      font-size: 18px;
+    }
+
+    .app-content {
+      padding: 22px;
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      line-height: 1.7;
+    }
+
+    .app-link {
+      display: inline-flex;
+      margin-top: 18px;
+      text-decoration: none;
+      color: white;
+      font-weight: 900;
+      padding: 12px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #38bdf8);
+    }
+
+    .home-indicator {
+      position: absolute;
+      left: 50%;
+      bottom: 8px;
+      transform: translateX(-50%);
+      width: 130px;
+      height: 5px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      z-index: 15;
+    }
+
+    @media (max-height: 760px) {
+      .iphone {
+        height: 94vh;
+      }
+
+      .app-icon,
+      .dock button {
+        width: 50px;
+        height: 50px;
+        font-size: 23px;
+      }
+
+      .apps {
+        gap: 13px 10px;
+      }
+    }
+
+    body.locked .back-home,
+body.locked .iphone {
+  display: none;
+}
+
+.admin-login {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(236, 72, 153, 0.35), transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(56, 189, 248, 0.35), transparent 30%),
+    linear-gradient(135deg, #020617, #1e1b4b, #701a75);
+}
+
+.admin-card {
+  width: min(390px, 92vw);
+  padding: 34px 26px;
+  border-radius: 34px;
+  text-align: center;
+  color: white;
+  background: rgba(255, 255, 255, 0.13);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.42);
+  backdrop-filter: blur(22px);
+}
+
+.admin-lock {
+  width: 78px;
+  height: 78px;
+  display: grid;
+  place-items: center;
+  margin: 0 auto 18px;
+  border-radius: 24px;
+  font-size: 36px;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6, #38bdf8);
+  box-shadow: 0 18px 35px rgba(236, 72, 153, 0.28);
+}
+
+.admin-card h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.admin-card p {
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+.admin-card input {
+  width: 100%;
+  height: 50px;
+  margin-bottom: 12px;
+  padding: 0 16px;
+  border: none;
+  outline: none;
+  border-radius: 16px;
+  color: white;
+  font-size: 15px;
+  font-family: inherit;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.admin-card input::placeholder {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.admin-card button {
+  width: 100%;
+  height: 50px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  color: white;
+  font-weight: 900;
+  font-size: 15px;
+  font-family: inherit;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6, #38bdf8);
+  box-shadow: 0 16px 34px rgba(56, 189, 248, 0.22);
+}
+
+.login-error {
+  min-height: 22px;
+  margin-top: 12px;
+  color: #fecdd3;
+  font-size: 14px;
+  font-weight: 700;
+}
+  </style>
+</head>
+
+<body class="locked">
+    <div class="admin-login" id="adminLogin">
+  <form class="admin-card" id="adminForm">
+    <div class="admin-lock">🔐</div>
+
+    <h1>Admin Only</h1>
+    <p>
+      Trang điện thoại của Tiến đang trong quá trình hoàn thiện.
+      Vui lòng đăng nhập để tiếp tục.
+    </p>
+
+    <input type="text" id="adminUser" placeholder="Tài khoản admin" autocomplete="off">
+    <input type="password" id="adminPass" placeholder="Mật khẩu" autocomplete="off">
+
+    <button type="submit">Mở iPhone</button>
+
+    <div class="login-error" id="loginError"></div>
+  </form>
+</div>
+  <a href="index.html" class="back-home">← Quay lại profile</a>
+
+  <div class="iphone">
+    <div class="screen">
+      <div class="dynamic-island"></div>
+
+      <div class="status-bar">
+        <span id="time">09:41</span>
+        <span>📶 5G 🔋</span>
+      </div>
+
+      <div class="home-title">
+        <h1>iPhone của Tiến</h1>
+        <p>Chạm vào ứng dụng để mở</p>
+      </div>
+
+      <div class="apps">
+  <button class="app" data-app="profile">
+    <div class="app-icon profile">👤</div>
+    <span>Profile</span>
+  </button>
+
+  <button class="app" data-app="japanese">
+    <div class="app-icon japanese">🌸</div>
+    <span>Japanese</span>
+  </button>
+
+  <button class="app" data-app="music">
+    <div class="app-icon music">🎵</div>
+    <span>Music</span>
+  </button>
+
+  <button class="app" data-app="gallery">
+    <div class="app-icon gallery">🖼️</div>
+    <span>Gallery</span>
+  </button>
+
+  <button class="app" data-app="love">
+    <div class="app-icon love">💌</div>
+    <span>Love</span>
+  </button>
+
+  <button class="app" data-app="notes">
+    <div class="app-icon notes">📝</div>
+    <span>Notes</span>
+  </button>
+
+  <button class="app" data-app="line">
+    <div class="app-icon line">LINE</div>
+    <span>LINE</span>
+  </button>
+
+  <button class="app" data-app="facebook">
+    <div class="app-icon facebook">f</div>
+    <span>Facebook</span>
+  </button>
+
+  <button class="app" data-app="messenger">
+    <div class="app-icon messenger">💬</div>
+    <span>Messenger</span>
+  </button>
+
+  <button class="app" data-app="tiktok">
+    <div class="app-icon tiktok">♪</div>
+    <span>TikTok</span>
+  </button>
+
+  <button class="app" data-app="instagram">
+    <div class="app-icon instagram">◎</div>
+    <span>Instagram</span>
+  </button>
+
+  <button class="app" data-app="soundcloud">
+    <div class="app-icon soundcloud">☁</div>
+    <span>SoundCloud</span>
+  </button>
+
+  <button class="app" data-app="zalo">
+    <div class="app-icon zalo">Zalo</div>
+    <span>Zalo</span>
+  </button>
+
+  <button class="app" data-app="settings">
+    <div class="app-icon settings">⚙️</div>
+    <span>Settings</span>
+  </button>
+
+  <button class="app" data-app="camera">
+    <div class="app-icon camera">📷</div>
+    <span>Camera</span>
+  </button>
+</div>
+
+      <div class="app-window" id="appWindow">
+        <div class="app-header">
+          <h2 id="appTitle">Ứng dụng</h2>
+          <button class="close-app" id="closeApp">×</button>
+        </div>
+
+        <div class="app-content" id="appContent">
+          Nội dung ứng dụng sẽ hiện ở đây.
+        </div>
+      </div>
+
+      <div class="home-indicator"></div>
+    </div>
+  </div>
+
+  <script>
+    const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "1702";
+
+const adminLogin = document.getElementById("adminLogin");
+const adminForm = document.getElementById("adminForm");
+const adminUser = document.getElementById("adminUser");
+const adminPass = document.getElementById("adminPass");
+const loginError = document.getElementById("loginError");
+
+function unlockPhone() {
+  document.body.classList.remove("locked");
+  adminLogin.style.display = "none";
+  localStorage.setItem("phone-admin-login", "yes");
+}
+
+if (localStorage.getItem("phone-admin-login") === "yes") {
+  unlockPhone();
+}
+
+adminForm.addEventListener("submit", function (event) {
+  event.preventDefault();
+
+  const user = adminUser.value.trim();
+  const pass = adminPass.value.trim();
+
+  if (user === ADMIN_USERNAME && pass === ADMIN_PASSWORD) {
+    unlockPhone();
+  } else {
+    loginError.textContent = "Sai tài khoản hoặc mật khẩu rồi.";
+    adminPass.value = "";
+    adminPass.focus();
+  }
+});
+
+    const timeEl = document.getElementById("time");
+    const appWindow = document.getElementById("appWindow");
+    const appTitle = document.getElementById("appTitle");
+    const appContent = document.getElementById("appContent");
+    const closeApp = document.getElementById("closeApp");
+
+    function updateTime() {
+      const now = new Date();
+      const hour = String(now.getHours()).padStart(2, "0");
+      const minute = String(now.getMinutes()).padStart(2, "0");
+      timeEl.textContent = `${hour}:${minute}`;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    function openApp(name) {
+      if (name === "profile") {
+        window.location.href = "index.html";
+        return;
+      }
+
+      if (name === "japanese") {
+        window.location.href = "japanese.html";
+        return;
+      }
+
+      const appData = {
+        line: {
+  title: "LINE",
+  content: `
+    <p>Ứng dụng LINE mini.</p>
+    <p>Bạn có thể dùng app này để đặt link LINE cá nhân của mình.</p>
+    <a class="app-link" href="https://line.me" target="_blank">Mở LINE</a>
+  `
+},
+
+facebook: {
+  title: "Facebook",
+  content: `
+    <p>Facebook của Tiến.</p>
+    <p>Thay link bên dưới bằng link Facebook cá nhân của bạn.</p>
+    <a class="app-link" href="https://facebook.com" target="_blank">Mở Facebook</a>
+  `
+},
+
+messenger: {
+  title: "Messenger",
+  content: `
+    <p>Messenger mini.</p>
+    <p>Có thể gắn link nhắn tin Facebook của bạn vào đây.</p>
+    <a class="app-link" href="https://m.me" target="_blank">Mở Messenger</a>
+  `
+},
+
+tiktok: {
+  title: "TikTok",
+  content: `
+    <p>TikTok của Tiến.</p>
+    <p>Thay link này bằng trang TikTok cá nhân của bạn.</p>
+    <a class="app-link" href="https://www.tiktok.com" target="_blank">Mở TikTok</a>
+  `
+},
+
+instagram: {
+  title: "Instagram",
+  content: `
+    <p>Instagram của Tiến.</p>
+    <p>Thay link này bằng Instagram cá nhân của bạn.</p>
+    <a class="app-link" href="https://www.instagram.com" target="_blank">Mở Instagram</a>
+  `
+},
+
+soundcloud: {
+  title: "SoundCloud",
+  content: `
+    <p>SoundCloud mini.</p>
+    <p>Bạn có thể gắn nhạc hoặc playlist yêu thích vào đây.</p>
+    <a class="app-link" href="https://soundcloud.com" target="_blank">Mở SoundCloud</a>
+  `
+},
+
+zalo: {
+  title: "Zalo",
+  content: `
+    <p>Zalo của Tiến.</p>
+    <p>Có thể gắn link Zalo hoặc số liên hệ của bạn ở đây.</p>
+    <a class="app-link" href="https://zalo.me" target="_blank">Mở Zalo</a>
+  `
+},
+        music: {
+          title: "🎵 Music",
+          content: `
+            <p>Đây là app nghe nhạc mini của Tiến.</p>
+            <p>Bạn có thể gắn nhạc trong thư mục <strong>music</strong> vào đây sau.</p>
+          `
+        },
+        gallery: {
+          title: "🖼️ Gallery",
+          content: `
+            <p>Đây là app thư viện ảnh.</p>
+            <p>Sau này mình có thể cho ảnh trong thư mục <strong>images</strong> hiện ở đây.</p>
+          `
+        },
+        love: {
+          title: "💌 Love",
+          content: `
+            <p>Một góc nhỏ dành cho những điều chân thành.</p>
+            <p>Có thể gắn secret letter hoặc hiệu ứng trái tim vào app này.</p>
+          `
+        },
+        notes: {
+          title: "📝 Notes",
+          content: `
+            <p><strong>Ghi chú hôm nay:</strong></p>
+            <p>Cố gắng thêm một chút mỗi ngày, profile của mình sẽ ngày càng đẹp hơn.</p>
+          `
+        },
+        settings: {
+          title: "⚙️ Settings",
+          content: `
+            <p>App cài đặt mini.</p>
+            <p>Có thể thêm đổi hình nền, đổi màu theme, bật/tắt nhạc nền.</p>
+          `
+        },
+        camera: {
+          title: "📷 Camera",
+          content: `
+            <p>Camera mô phỏng.</p>
+            <p>Sau này có thể làm hiệu ứng mở camera hoặc ảnh kỷ niệm.</p>
+          `
+        },
+        phone: {
+          title: "📞 Phone",
+          content: `
+            <p>Danh bạ yêu thích:</p>
+            <p><strong>Phạm Văn Tiến</strong></p>
+          `
+        },
+        message: {
+          title: "💬 Message",
+          content: `
+            <p>Tin nhắn mới:</p>
+            <p>“Chào mừng bạn đến với chiếc iPhone mini trong profile của Tiến.”</p>
+          `
+        },
+        browser: {
+          title: "🌐 Browser",
+          content: `
+            <p>Trình duyệt mini.</p>
+            <a class="app-link" href="index.html">Mở profile</a>
+          `
+        }
+      };
+
+      const data = appData[name];
+
+      if (!data) return;
+
+      appTitle.innerHTML = data.title;
+      appContent.innerHTML = data.content;
+      appWindow.classList.add("active");
+    }
+
+    document.querySelectorAll("[data-app]").forEach(button => {
+      button.addEventListener("click", () => {
+        openApp(button.dataset.app);
+      });
+    });
+
+    closeApp.addEventListener("click", () => {
+      appWindow.classList.remove("active");
+    });
+  </script>
+</body>
+</html>
