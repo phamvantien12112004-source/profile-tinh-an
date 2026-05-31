@@ -308,6 +308,89 @@
       border-color: rgba(192, 132, 252, 0.5);
     }
 
+    .btn-outline {
+      color: #fb7185;
+      background: transparent;
+      border: 2px solid #fb7185;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-outline:hover {
+      background: rgba(251, 113, 133, 0.1);
+      color: #fb7185;
+    }
+
+    .btn-outline .icon {
+      margin-right: 6px;
+    }
+
+    /* Floating user badge when logged in */
+    .user-badge {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: white;
+      padding: 8px 16px;
+      border-radius: 999px;
+      box-shadow: 0 4px 20px rgba(251, 113, 133, 0.3);
+      animation: floatBadge 3s ease-in-out infinite;
+    }
+
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+
+    .user-badge .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fb7185, #c084fc);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    .user-badge .name {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .user-badge .logout-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.6;
+      transition: 0.2s;
+    }
+
+    .user-badge .logout-btn:hover {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+
+    body.dark .user-badge {
+      background: rgba(30, 41, 59, 0.9);
+    }
+
+    body.dark .user-badge .name {
+      color: #f9a8d4;
+    }
+
     body.dark .btn-secondary {
       background: rgba(30, 41, 59, 0.7);
       color: #f9a8d4;
@@ -4655,6 +4738,7 @@
             <a class="btn btn-primary" href="#about">Tìm hiểu về mình</a>
             <a class="btn btn-primary" href="#social">Kết nối với mình</a>
             <a class="btn btn-primary" href="japanese.html">Học tiếng Nhật cùng mình</a>
+            <a class="btn btn-outline" href="login.html">Đăng nhập / Đăng ký</a>
           </div>
         </div>
       </div>
@@ -5082,6 +5166,13 @@
       </div>
     </div>
   </section>
+
+  <!-- ============ USER BADGE (HIỆN KHI ĐĂNG NHẬP) ============ -->
+  <div class="user-badge" id="userBadge" style="display: none;">
+    <div class="avatar" id="userAvatar">👤</div>
+    <span class="name" id="userName">User</span>
+    <button class="logout-btn" id="logoutBtn" title="Đăng xuất">🚪</button>
+  </div>
 
   <!-- ============ KHUNG CHAT NHẮN TIN ============ -->
   <div class="chat-widget" id="chatWidget">
@@ -6223,215 +6314,553 @@
     <!-- ============ CHAT WIDGET SCRIPT ============ -->
     <script>
     (function() {
-      const chatWidget = document.getElementById("chatWidget");
-      const chatBox = document.getElementById("chatBox");
-      const chatTrigger = document.getElementById("chatTrigger");
-      const chatClose = document.getElementById("chatClose");
-      const chatMessages = document.getElementById("chatMessages");
-      const chatTextInput = document.getElementById("chatTextInput");
-      const chatSend = document.getElementById("chatSend");
-      const chatToast = document.getElementById("chatToast");
-      const formspreeEndpoint = "https://formspree.io/f/xwvynrvq";
-      
-      let chatInitialized = false;
-      let typingTimer = null;
+      // Đợi DOM load xong
+      function initChat() {
+        const chatTrigger = document.getElementById("chatTrigger");
+        const chatBox = document.getElementById("chatBox");
+        const chatClose = document.getElementById("chatClose");
+        const chatMessages = document.getElementById("chatMessages");
+        const chatTextInput = document.getElementById("chatTextInput");
+        const chatSend = document.getElementById("chatSend");
+        const chatToast = document.getElementById("chatToast");
 
-      // Toggle chat box
-      chatTrigger.addEventListener("click", () => {
-        chatBox.classList.toggle("open");
-        
-        // Chỉ chạy animation lần đầu mở
-        if (chatBox.classList.contains("open") && !chatInitialized) {
-          chatInitialized = true;
-          startBotWelcome();
-        }
-      });
-
-      // Close chat
-      chatClose.addEventListener("click", () => {
-        chatBox.classList.remove("open");
-      });
-
-      // Show toast notification
-      function showToast(message) {
-        chatToast.textContent = message;
-        chatToast.classList.add("show");
-        setTimeout(() => {
-          chatToast.classList.remove("show");
-        }, 3000);
-      }
-
-      // Thêm hiệu ứng đang gõ
-      function showTypingIndicator() {
-        const typingDiv = document.createElement("div");
-        typingDiv.className = "chat-typing";
-        typingDiv.id = "chatTyping";
-        typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-        chatMessages.appendChild(typingDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-      // Xóa hiệu ứng đang gõ
-      function hideTypingIndicator() {
-        const typing = document.getElementById("chatTyping");
-        if (typing) typing.remove();
-      }
-
-      // Gõ từng ký tự
-      function typeMessage(text, callback) {
-        showTypingIndicator();
-        
-        const msgDiv = document.createElement("div");
-        msgDiv.className = "chat-message bot";
-        const contentDiv = document.createElement("div");
-        contentDiv.className = "chat-message-content";
-        msgDiv.appendChild(contentDiv);
-        chatMessages.appendChild(msgDiv);
-        
-        let charIndex = 0;
-        const speed = 40; // ms mỗi ký tự
-        
-        function typeNext() {
-          if (charIndex < text.length) {
-            contentDiv.textContent += text[charIndex];
-            charIndex++;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            typingTimer = setTimeout(typeNext, speed);
-          } else {
-            hideTypingIndicator();
-            if (callback) callback();
-          }
-        }
-        
-        typeNext();
-      }
-
-      // Chuỗi chào mừng
-      function startBotWelcome() {
-        const msg1 = "Chào cậu, chúc cậu một ngày mới vui vẻ, mình là Tiến rất vui được nói chuyện với cậu. Nếu có điều gì muốn nói với mình cứ viết ở đây nha 💗";
-        
-        typeMessage(msg1, () => {
-          // Đợi 0.8-1 giây rồi gửi tin nhắn thứ 2
-          setTimeout(() => {
-            const msg2 = "Đây là tin nhắn tự động của mình, mình sẽ trả lời lại cậu sau ít phút. Cảm ơn cậu đã dành thời gian ra nhắn tin cho mình.";
-            typeMessage(msg2, () => {});
-          }, 900);
-        });
-      }
-
-      // Bot trả lời theo từ khóa
-      function getBotReply(message) {
-        const msg = message.toLowerCase();
-        
-        // Chào
-        if (/chào|hello|hi|hey|hí/i.test(msg)) {
-          return "Chào cậu nha 💗 Mình là Tiến, rất vui vì cậu đã ghé qua đây.";
-        }
-        
-        // Facebook / Liên hệ
-        if (/facebook|fb|liên hệ|contact|tìm mình/i.test(msg)) {
-          return "Cậu có thể liên hệ với mình qua Facebook ở phần Mạng XH nha 💗";
-        }
-        
-        // Nhật Bản / ở đâu
-        if (/nhật|nhật bản|ở đâu|đang sống|đang ở/i.test(msg)) {
-          return "Hiện tại mình đang sinh sống và làm việc tại Nhật Bản 🇯🇵";
-        }
-        
-        // Thích / Crush / Yêu
-        if (/thích|crush|yêu|like|love/i.test(msg)) {
-          return "Có những điều hơi khó nói trực tiếp, nhưng nếu thật lòng thì mình nghĩ nên nói ra một cách dịu dàng 💗";
-        }
-        
-        // Buồn / Mệt / Cô đơn
-        if (/buồn|mệt|cô đơn|lonely|sad|tired/i.test(msg)) {
-          return "Nếu hôm nay cậu mệt, mong cậu vẫn nhẹ nhàng với bản thân một chút nha. Cậu đã cố gắng nhiều rồi 💗";
-        }
-        
-        // Code / Web / Trang web
-        if (/code|web|trang web|website|lập trình|programming/i.test(msg)) {
-          return "Trang này là một project nhỏ mình làm để lưu lại một phần tính cách, sở thích và cảm xúc của mình.";
-        }
-        
-        // Mặc định
-        return "Mình đã nhận được tin nhắn của cậu rồi nha 💗 Mình sẽ đọc và trả lời lại cậu sau ít phút.";
-      }
-
-      // Add message to chat
-      function addMessage(content, isUser = false) {
-        const msgDiv = document.createElement("div");
-        msgDiv.className = "chat-message " + (isUser ? "user" : "bot");
-        msgDiv.innerHTML = '<div class="chat-message-content">' + content + "</div>";
-        chatMessages.appendChild(msgDiv);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-      }
-
-      // Send message
-      async function sendMessage() {
-        const message = chatTextInput.value.trim();
-
-        if (!message) {
-          showToast("Vui lòng nhập tin nhắn nha!");
+        if (!chatTrigger || !chatBox) {
+          console.error("Chat elements not found");
           return;
         }
 
-        // Clear typing timer if any
-        if (typingTimer) {
-          clearTimeout(typingTimer);
+        // Variables
+        let typingTimer = null;
+        let hasShownWelcome = false;
+        let currentUser = null;
+        let isAdmin = false;
+        let todayAIUsage = 0;
+        const MAX_AI_PER_DAY = 10;
+
+        const googleSheetEndpoint = "https://script.google.com/macros/s/AKfycbzUo1RGNj7YOd615T883vfbeDKDQirJpfdGjIZK65mEFg-7A0Ng3KSHqqwfL9sW84lkJw/exec";
+
+        // ======= UI Functions =======
+
+        function showToast(message) {
+          if (!chatToast) return;
+          chatToast.textContent = message;
+          chatToast.classList.add("show");
+          setTimeout(() => chatToast.classList.remove("show"), 3000);
+        }
+
+        function showTypingIndicator() {
+          if (!chatMessages) return;
           hideTypingIndicator();
+          const typingDiv = document.createElement("div");
+          typingDiv.className = "chat-typing";
+          typingDiv.id = "chatTyping";
+          typingDiv.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+          chatMessages.appendChild(typingDiv);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // Add user's message to chat
-        addMessage(message, true);
+        function hideTypingIndicator() {
+          const typing = document.getElementById("chatTyping");
+          if (typing) typing.remove();
+        }
 
-        // Clear input
-        chatTextInput.value = "";
+        function typeMessage(text, callback) {
+          if (!chatMessages) return;
+          showTypingIndicator();
 
-        // Prepare data for Formspree
-        const now = new Date();
-        const formData = {
-          loai: "Tin nhắn từ khung Messenger trên profile",
-          ten_nguoi_gui: "Người ẩn danh",
-          noi_dung: message,
-          thoi_gian: now.toLocaleString("vi-VN"),
-          link_trang: window.location.href,
-          trinh_duyet: navigator.userAgent
-        };
+          const msgDiv = document.createElement("div");
+          msgDiv.className = "chat-message bot";
+          const contentDiv = document.createElement("div");
+          contentDiv.className = "chat-message-content";
+          msgDiv.appendChild(contentDiv);
+          chatMessages.appendChild(msgDiv);
 
-        try {
-          const response = await fetch(formspreeEndpoint, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", Accept: "application/json" },
-            body: JSON.stringify(formData)
-          });
+          let charIndex = 0;
+          const speed = 40;
 
-          if (response.ok) {
-            showToast("Đã gửi tin nhắn cho mình rồi 💗");
-            
-            // Delay trước khi bot trả lời (giống người thật)
-            setTimeout(() => {
-              const reply = getBotReply(message);
-              typeMessage(reply, () => {});
-            }, 800);
-          } else {
-            showToast("Gửi chưa thành công, cậu thử lại sau nha.");
+          function typeNext() {
+            if (charIndex < text.length) {
+              contentDiv.textContent += text[charIndex];
+              charIndex++;
+              if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+              typingTimer = setTimeout(typeNext, speed);
+            } else {
+              hideTypingIndicator();
+              if (callback) callback();
+            }
           }
-        } catch (error) {
-          console.error("Chat send error:", error);
-          showToast("Không gửi được tin nhắn. Kiểm tra mạng hoặc Formspree nha.");
+
+          typeNext();
         }
+
+        function addMessage(content, isUser = false) {
+          if (!chatMessages) return;
+          const msgDiv = document.createElement("div");
+          msgDiv.className = "chat-message " + (isUser ? "user" : "bot");
+          msgDiv.innerHTML = '<div class="chat-message-content">' + content + "</div>";
+          chatMessages.appendChild(msgDiv);
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // ======= Google Sheets =======
+
+        async function saveToGoogleSheet(message, reply) {
+          try {
+            await fetch(googleSheetEndpoint, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                thoi_gian: new Date().toLocaleString("vi-VN"),
+                nguoi_gui: currentUser ? currentUser.displayName : "Ẩn danh",
+                noi_dung: message,
+                cau_tra_loi: reply || "",
+                link_trang: window.location.href,
+                trinh_duyet: navigator.userAgent
+              })
+            });
+          } catch (e) {
+            console.log("Google Sheets error:", e);
+          }
+        }
+
+        // ======= Helper Functions =======
+
+        function escapeHTML(str) {
+          return String(str || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        // Hiển thị tin nhắn theo sender
+        function renderMessage(sender, text) {
+          if (sender === 'user') {
+            // Tin nhắn user - bên phải
+            const div = document.createElement("div");
+            div.className = "chat-message user";
+            div.innerHTML = '<div class="chat-message-content">' + escapeHTML(text) + '</div>';
+            chatMessages.appendChild(div);
+          } else if (sender === 'bot') {
+            // Tin nhắn bot - bên trái
+            const div = document.createElement("div");
+            div.className = "chat-message bot";
+            div.innerHTML = '<div class="chat-message-content">' + escapeHTML(text) + '</div>';
+            chatMessages.appendChild(div);
+          } else if (sender === 'admin') {
+            // Tin nhắn admin - bên trái với nhãn
+            const div = document.createElement("div");
+            div.className = "chat-message bot admin-reply";
+            div.innerHTML = '<div class="chat-message-content">💌 <strong>Tiến đã trả lời:</strong> ' + escapeHTML(text) + '</div>';
+            chatMessages.appendChild(div);
+          }
+          chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // ======= Firebase Functions =======
+
+        let currentConversationId = null;
+
+        // Khởi tạo conversation khi đăng nhập
+        async function initConversation() {
+          if (!window.FirebaseService || !currentUser) return;
+
+          const userName = currentUser.displayName || currentUser.email.split("@")[0] || "cậu";
+          const userEmail = currentUser.email;
+
+          const result = await FirebaseService.getOrCreateConversation(
+            currentUser.uid,
+            userName,
+            userEmail
+          );
+
+          if (result.success) {
+            currentConversationId = result.id;
+            console.log("Conversation ID:", currentConversationId);
+          }
+        }
+
+        // Gửi tin nhắn user
+        async function sendToFirebase(message) {
+          if (!window.FirebaseService) return;
+
+          // Khởi tạo conversation nếu chưa có
+          if (!currentConversationId) {
+            await initConversation();
+          }
+
+          if (currentConversationId) {
+            // Gửi message của user
+            await FirebaseService.sendUserMessage(currentConversationId, message, 'user');
+
+            // Kiểm tra và gửi auto reply (chỉ 1 lần)
+            FirebaseService.checkAndSendAutoReply(currentConversationId);
+          }
+        }
+
+        // Lấy tên user từ Firestore
+        async function getUserDisplayName(userId) {
+          if (!window.FirebaseService) return null;
+          try {
+            const userInfo = await FirebaseService.getUserInfo(userId);
+            if (userInfo) {
+              return userInfo.name || userInfo.email.split("@")[0] || "cậu";
+            }
+          } catch (e) {}
+          return null;
+        }
+
+        // ======= Listen Messages (Realtime) =======
+
+        let unsubscribeMessages = null;
+        let messagesInitialized = false;
+
+        function listenMessages() {
+          if (!window.FirebaseService || !currentConversationId) return;
+
+          if (unsubscribeMessages) {
+            unsubscribeMessages();
+          }
+
+          console.log("Starting listenMessages for:", currentConversationId);
+
+          unsubscribeMessages = FirebaseService.listenConversationMessages(currentConversationId, (snapshot) => {
+            console.log("onSnapshot triggered, docs:", snapshot.size);
+
+            // Chỉ render khi KHÔNG phải là initial load
+            // Initial load sẽ do renderWelcomeOnce xử lý
+            if (messagesInitialized) {
+              // Đã initialized rồi, chỉ render messages mới
+              snapshot.docChanges().forEach((change) => {
+                if (change.type === 'added') {
+                  const data = change.doc.data();
+                  const sender = data.sender || 'bot';
+                  const text = data.text || '';
+                  if (text) {
+                    renderMessage(sender, text);
+                  }
+                }
+              });
+            }
+          });
+        }
+
+        // Render welcome và messages từ Firestore
+        async function renderWelcomeAndMessages() {
+          if (messagesInitialized) return;
+          messagesInitialized = true;
+
+          // Welcome messages
+          const msg1 = "Chào cậu, chúc cậu một ngày mới vui vẻ, mình là Tiến rất vui được nói chuyện với cậu 💗";
+          let msg2 = "Cậu có thể đăng nhập để lưu tin nhắn hoặc dùng AI chatbot nha!";
+          
+          if (currentUser) {
+            const name = currentUser.displayName || currentUser.email.split("@")[0] || "cậu";
+            msg2 = `Chào ${name} nha 💗 Đã đăng nhập rồi, cậu có thể dùng AI chatbot hoặc nhắn tin để mình trả lời sau nhé!`;
+          }
+
+          renderMessage('bot', msg1);
+          setTimeout(() => {
+            renderMessage('bot', msg2);
+          }, 500);
+
+          // Load existing messages từ Firestore
+          if (currentConversationId && window.FirebaseService) {
+            try {
+              const snapshot = await FirebaseService.db
+                .collection('conversations').doc(currentConversationId)
+                .collection('messages')
+                .orderBy('createdAt', 'asc')
+                .get();
+
+              snapshot.forEach((doc) => {
+                const data = doc.data();
+                const sender = data.sender || 'bot';
+                const text = data.text || '';
+                if (text) {
+                  renderMessage(sender, text);
+                }
+              });
+            } catch (e) {
+              console.error("Error loading messages:", e);
+            }
+          }
+        }
+
+        async function loadAIUsage() {
+          if (!window.FirebaseService || !currentUser) return;
+          todayAIUsage = await FirebaseService.getTodayAIUsage(currentUser.uid);
+          updateAIButton();
+        }
+
+        function updateAIButton() {
+          const aiBtn = document.getElementById("aiChatBtn");
+          if (!aiBtn) return;
+
+          const remaining = MAX_AI_PER_DAY - todayAIUsage;
+          if (remaining <= 0) {
+            aiBtn.textContent = "Hết lượt AI hôm nay";
+            aiBtn.disabled = true;
+          } else {
+            aiBtn.textContent = "🤖 Hỏi AI (" + remaining + ")";
+            aiBtn.disabled = false;
+          }
+        }
+
+        async function handleAIChat() {
+          if (!currentUser) {
+            showToast("Đăng nhập để dùng AI!");
+            return;
+          }
+
+          if (todayAIUsage >= MAX_AI_PER_DAY) {
+            showToast("Hết lượt AI hôm nay!");
+            return;
+          }
+
+          const message = chatTextInput.value.trim();
+          if (!message) {
+            showToast("Nhập tin nhắn trước!");
+            return;
+          }
+
+          if (!currentConversationId) {
+            showToast("Lỗi! Hãy gửi tin nhắn thường trước.");
+            return;
+          }
+
+          // Disable AI button
+          const aiBtn = document.getElementById("aiChatBtn");
+          if (aiBtn) aiBtn.disabled = true;
+
+          showToast("Đang hỏi AI...");
+
+          try {
+            const response = await fetch(
+              "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=YOUR_GEMINI_API_KEY",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  contents: [{ parts: [{ text: message }] }],
+                  systemInstruction: {
+                    parts: [{ text: "Bạn là Tiến - sinh năm 2004, sống ở Nhật Bản. Trả lời ngắn gọn, dễ thương, dùng emoji 💗" }]
+                  },
+                  generationConfig: { maxOutputTokens: 200, temperature: 0.8 }
+                })
+              }
+            );
+
+            if (response.ok) {
+              const data = await response.json();
+              const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "Xin lỗi, bot bận 💗";
+
+              // Gửi user message lên Firestore
+              await FirebaseService.sendUserMessage(currentConversationId, message, 'user');
+
+              // Gửi AI reply lên Firestore
+              await FirebaseService.sendBotOrAdminMessage(currentConversationId, reply, 'admin');
+
+              // Tăng usage
+              await FirebaseService.incrementAIUsage(currentUser.uid);
+              todayAIUsage++;
+              updateAIButton();
+
+              chatTextInput.value = "";
+            } else {
+              showToast("AI đang bận, thử lại sau nhé!");
+            }
+          } catch (error) {
+            console.error("AI error:", error);
+            showToast("Có lỗi xảy ra!");
+          } finally {
+            if (aiBtn) aiBtn.disabled = false;
+          }
+        }
+
+        // ======= Send Message =======
+
+        let isSending = false;
+
+        async function sendMessage() {
+          if (isSending) return;
+
+          const message = chatTextInput.value.trim();
+          if (!message) {
+            showToast("Vui lòng nhập tin nhắn!");
+            return;
+          }
+
+          if (!currentUser) {
+            showToast("Cần đăng nhập để gửi tin!");
+            return;
+          }
+
+          isSending = true;
+          chatSend.disabled = true;
+
+          // Clear input ngay
+          chatTextInput.value = "";
+
+          try {
+            // Gửi lên Firestore (sẽ tự thêm bot reply nếu cần)
+            await sendToFirebase(message);
+
+            // Lưu Google Sheets
+            saveToGoogleSheet(message, "");
+
+            // UI sẽ tự cập nhật qua listenMessages()
+          } catch (error) {
+            console.error("Send message error:", error);
+            showToast("Gửi thất bại, thử lại nhé!");
+            // Trả lại text nếu lỗi
+            chatTextInput.value = message;
+          } finally {
+            isSending = false;
+            chatSend.disabled = false;
+            chatTextInput.focus();
+          }
+        }
+
+        // ======= Event Listeners =======
+
+        // Track để tránh gọi nhiều lần
+        let isInitialized = false;
+
+        chatTrigger.addEventListener("click", () => {
+          chatBox.classList.toggle("open");
+
+          if (chatBox.classList.contains("open") && !hasShownWelcome) {
+            hasShownWelcome = true;
+
+            if (currentUser && !isInitialized) {
+              isInitialized = true;
+              // Khởi tạo conversation và bắt đầu realtime listener
+              initConversation().then(() => {
+                // Render welcome + load messages
+                renderWelcomeAndMessages();
+                // Bắt đầu realtime listen cho messages mới
+                listenMessages();
+                loadAIUsage();
+              });
+            } else if (currentUser && isInitialized) {
+              // Đã init rồi, không làm gì thêm
+            } else {
+              // User chưa đăng nhập, hiện welcome đơn giản
+              renderMessage('bot', "Chào cậu! Có thể đăng nhập để lưu tin nhắn hoặc dùng AI chatbot nha! 💗");
+            }
+          }
+        });
+
+        chatClose.addEventListener("click", () => {
+          chatBox.classList.remove("open");
+        });
+
+        // Chỉ bind sendMessage một lần duy nhất
+        chatSend.addEventListener("click", (e) => {
+          e.preventDefault();
+          sendMessage();
+        });
+
+        chatTextInput.addEventListener("keypress", (e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+
+        // ======= Firebase Auth =======
+
+        function updateUserBadge(user) {
+          const badge = document.getElementById("userBadge");
+          const avatar = document.getElementById("userAvatar");
+          const name = document.getElementById("userName");
+          const loginBtn = document.querySelector(".btn-outline");
+
+          if (user) {
+            // Hiện badge user
+            badge.style.display = "flex";
+            avatar.textContent = "🥰";
+            name.textContent = user.displayName || user.email.split("@")[0];
+
+            // Ẩn nút đăng nhập
+            if (loginBtn) loginBtn.style.display = "none";
+          } else {
+            // Ẩn badge user
+            badge.style.display = "none";
+
+            // Hiện nút đăng nhập
+            if (loginBtn) loginBtn.style.display = "inline-block";
+          }
+        }
+
+        if (window.FirebaseService) {
+          FirebaseService.onAuthStateChange(async (user) => {
+            currentUser = user;
+            updateUserBadge(user);
+
+            if (user) {
+              isAdmin = await FirebaseService.checkIsAdmin(user.uid);
+              // Không gọi listenMessages() ở đây!
+              // Chỉ gọi khi user click mở chat
+            } else {
+              currentConversationId = null;
+              if (unsubscribeMessages) {
+                unsubscribeMessages();
+              }
+            }
+          });
+        }
+
+        // Logout button
+        document.getElementById("logoutBtn").addEventListener("click", async () => {
+          if (window.FirebaseService) {
+            if (unsubscribeMessages) {
+              unsubscribeMessages();
+            }
+            currentConversationId = null;
+            messagesInitialized = false;
+            isInitialized = false;
+            hasShownWelcome = false;
+            await FirebaseService.logoutUser();
+            showToast("Đã đăng xuất! 👋");
+          }
+        });
+
+        // ======= AI Button =======
+
+        const aiBtn = document.createElement("button");
+        aiBtn.id = "aiChatBtn";
+        aiBtn.className = "chat-send-btn";
+        aiBtn.textContent = "🤖 Hỏi AI";
+        aiBtn.style.marginLeft = "8px";
+        aiBtn.style.background = "linear-gradient(135deg, #667eea 0%, #764ba2 100%)";
+        aiBtn.style.color = "white";
+        aiBtn.style.border = "none";
+        aiBtn.style.borderRadius = "8px";
+        aiBtn.style.padding = "10px 12px";
+        aiBtn.style.cursor = "pointer";
+        aiBtn.onclick = handleAIChat;
+        chatSend.parentNode.appendChild(aiBtn);
+
+        console.log("Chat widget initialized");
       }
 
-      // Send button click
-      chatSend.addEventListener("click", sendMessage);
-
-      // Enter key to send
-      chatTextInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          sendMessage();
-        }
-      });
+      // Init when DOM ready
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initChat);
+      } else {
+        initChat();
+      }
     })();
     </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
 </body>
 </html>
