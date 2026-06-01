@@ -1,0 +1,1518 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Khu vườn của Tiến 🌸</title>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --sky-1: #fce7f3;
+      --sky-2: #f3e8ff;
+      --sky-3: #dbeafe;
+      --grass-1: #86efac;
+      --grass-2: #4ade80;
+      --grass-3: #16a34a;
+      --soil: #92400e;
+      --text: #1f2937;
+      --text-soft: #6b7280;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+      background: linear-gradient(180deg,
+        var(--sky-1) 0%,
+        var(--sky-2) 35%,
+        var(--sky-3) 60%,
+        var(--grass-1) 60%,
+        var(--grass-2) 100%);
+      background-attachment: fixed;
+    }
+
+    .back-home {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 200;
+      text-decoration: none;
+      color: #be185d;
+      font-weight: 800;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      border: 1px solid rgba(236, 72, 153, 0.2);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 24px rgba(236,72,153,0.18);
+      transition: 0.2s ease;
+    }
+
+    .back-home:hover { transform: translateY(-2px); }
+
+    /* ============ SKY ============ */
+    .sky-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .sun {
+      position: absolute;
+      top: 50px;
+      right: 80px;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 35% 35%, #fef9c3 0%, #fde047 40%, #fbbf24 100%);
+      box-shadow:
+        0 0 60px rgba(253, 224, 71, 0.7),
+        0 0 120px rgba(251, 191, 36, 0.45);
+      animation: sunPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes sunPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .cloud {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 999px;
+      box-shadow:
+        0 8px 24px rgba(168, 85, 247, 0.12),
+        inset 0 -10px 20px rgba(255, 255, 255, 0.5);
+      filter: blur(0.5px);
+    }
+
+    .cloud::before, .cloud::after {
+      content: "";
+      position: absolute;
+      background: inherit;
+      border-radius: 50%;
+    }
+
+    .cloud::before {
+      width: 60%; height: 140%;
+      top: -50%; left: 10%;
+    }
+
+    .cloud::after {
+      width: 50%; height: 120%;
+      top: -40%; right: 12%;
+    }
+
+    .cloud.c1 { width: 130px; height: 32px; top: 70px; left: -150px; animation: cloudDrift 36s linear infinite; }
+    .cloud.c2 { width: 170px; height: 40px; top: 140px; left: -200px; animation: cloudDrift 48s linear infinite -10s; opacity: 0.7; }
+    .cloud.c3 { width: 100px; height: 26px; top: 220px; left: -150px; animation: cloudDrift 42s linear infinite -22s; opacity: 0.6; }
+
+    @keyframes cloudDrift {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(100vw + 250px)); }
+    }
+
+    /* Bay đậu - butterflies */
+    .butterfly {
+      position: fixed;
+      font-size: 24px;
+      z-index: 12;
+      pointer-events: none;
+      animation: flutter 18s linear infinite;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+    }
+
+    .butterfly.b1 { animation-duration: 22s; animation-delay: 0s; }
+    .butterfly.b2 { animation-duration: 26s; animation-delay: -8s; }
+    .butterfly.b3 { animation-duration: 20s; animation-delay: -14s; }
+
+    @keyframes flutter {
+      0%   { transform: translate(0vw, 60vh) rotate(-15deg); }
+      15%  { transform: translate(20vw, 30vh) rotate(15deg); }
+      35%  { transform: translate(50vw, 50vh) rotate(-10deg); }
+      55%  { transform: translate(70vw, 25vh) rotate(15deg); }
+      75%  { transform: translate(85vw, 55vh) rotate(-10deg); }
+      100% { transform: translate(105vw, 35vh) rotate(15deg); }
+    }
+
+    /* Hills */
+    .hills {
+      position: fixed;
+      left: 0; right: 0;
+      bottom: 0;
+      height: 50vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hill {
+      position: absolute;
+      bottom: 35%;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .hill.h1 {
+      left: -10%;
+      width: 60%;
+      height: 200px;
+      background: linear-gradient(180deg, #86efac, #4ade80);
+      opacity: 0.55;
+    }
+
+    .hill.h2 {
+      right: -15%;
+      width: 70%;
+      height: 240px;
+      background: linear-gradient(180deg, #6ee7b7, #34d399);
+      opacity: 0.65;
+    }
+
+    /* Falling petals */
+    .petal {
+      position: fixed;
+      top: -30px;
+      width: 14px;
+      height: 14px;
+      background: radial-gradient(circle at 30% 30%, #fbcfe8, #ec4899);
+      border-radius: 50% 0 50% 50%;
+      pointer-events: none;
+      z-index: 11;
+      animation: petalFall linear infinite;
+      opacity: 0;
+    }
+
+    @keyframes petalFall {
+      0%   { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.85; }
+      90%  { opacity: 0.85; }
+      100% { transform: translate(80px, 110vh) rotate(540deg); opacity: 0; }
+    }
+
+    /* ============ MAIN ============ */
+    .container {
+      position: relative;
+      z-index: 5;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 60px 20px 200px;
+    }
+
+    .garden-header {
+      text-align: center;
+      padding: 40px 20px 30px;
+    }
+
+    .header-card {
+      display: inline-block;
+      padding: 30px 40px;
+      border-radius: 32px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 20px 60px rgba(236, 72, 153, 0.18);
+    }
+
+    .garden-header h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      margin-bottom: 10px;
+      color: #1f2937;
+    }
+
+    .name-gradient {
+      background: linear-gradient(90deg, #ec4899, #a855f7, #38bdf8, #ec4899);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: nameGradient 4s ease-in-out infinite;
+    }
+
+    @keyframes nameGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: var(--text-soft);
+      margin-bottom: 20px;
+    }
+
+    .counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #fce7f3, #ede9fe);
+      color: #be185d;
+      font-weight: 800;
+      font-size: 16px;
+      box-shadow: inset 0 -3px 8px rgba(236, 72, 153, 0.15);
+    }
+
+    .counter strong {
+      font-size: 22px;
+      color: #ec4899;
+    }
+
+    .counter-emoji {
+      animation: bounce 1.4s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* ============ GARDEN ============ */
+    .garden-wrap {
+      position: relative;
+      width: 100%;
+      min-height: 60vh;
+      margin-top: 20px;
+    }
+
+    .garden {
+      position: relative;
+      width: 100%;
+      min-height: 70vh;
+      padding-bottom: 20px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-soft);
+      font-size: 17px;
+    }
+
+    .empty-state span {
+      font-size: 64px;
+      display: block;
+      margin-bottom: 18px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+
+    /* ============ FLOWER CSS ART ============ */
+    .flower {
+      position: absolute;
+      width: 60px;
+      height: 100px;
+      bottom: var(--y, 0px);
+      left: var(--x, 50%);
+      cursor: pointer;
+      animation: flowerGrow 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      transform-origin: bottom center;
+      z-index: var(--z, 10);
+    }
+
+    @keyframes flowerGrow {
+      0%   { transform: translateX(-50%) scaleY(0); opacity: 0; }
+      60%  { transform: translateX(-50%) scaleY(1.08); opacity: 1; }
+      100% { transform: translateX(-50%) scaleY(1); opacity: 1; }
+    }
+
+    .flower-sway {
+      width: 100%; height: 100%;
+      position: relative;
+      transform-origin: bottom center;
+      animation: swayLeaf 4s ease-in-out infinite;
+    }
+
+    @keyframes swayLeaf {
+      0%, 100% { transform: rotate(-2deg); }
+      50%      { transform: rotate(2deg); }
+    }
+
+    .flower:hover .flower-sway {
+      animation-duration: 0.7s;
+    }
+
+    .stem {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      width: 5px;
+      height: 60%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #65a30d, #4d7c0f);
+      border-radius: 4px;
+      box-shadow: inset -1px 0 2px rgba(0,0,0,0.2);
+    }
+
+    .leaf {
+      position: absolute;
+      width: 24px;
+      height: 14px;
+      border-radius: 50% 0 50% 0;
+      background: linear-gradient(135deg, #86efac, #4d7c0f);
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.15);
+      bottom: 22%;
+    }
+
+    .leaf.left  { left: -8px;  transform: rotate(-30deg); transform-origin: right center; }
+    .leaf.right { right: -8px; transform: rotate(30deg) scaleX(-1); transform-origin: left center; }
+
+    .flower-head {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 56px;
+      height: 56px;
+    }
+
+    /* Type 1: Tulip */
+    .flower.tulip .flower-head {
+      width: 36px;
+      height: 50px;
+      border-radius: 50% 50% 6px 6px / 60% 60% 6px 6px;
+      background: linear-gradient(180deg, var(--c1), var(--c2));
+      box-shadow:
+        inset -4px -8px 12px rgba(0,0,0,0.18),
+        inset 4px 6px 10px rgba(255,255,255,0.4);
+    }
+
+    .flower.tulip .flower-head::before,
+    .flower.tulip .flower-head::after {
+      content: "";
+      position: absolute;
+      top: -2px;
+      width: 18px;
+      height: 36px;
+      background: linear-gradient(180deg, var(--c1), var(--c2));
+      filter: brightness(0.88);
+      border-radius: 50% 50% 4px 4px;
+    }
+
+    .flower.tulip .flower-head::before {
+      left: -6px;
+      transform: rotate(-14deg);
+    }
+
+    .flower.tulip .flower-head::after {
+      right: -6px;
+      transform: rotate(14deg);
+    }
+
+    /* Type 2: Daisy (cúc) */
+    .flower.daisy .flower-head {
+      width: 60px; height: 60px;
+      top: -8px;
+    }
+
+    .flower.daisy .petal-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+
+    .flower.daisy .petal-ring span {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 14px;
+      height: 26px;
+      transform-origin: 50% 30px;
+      border-radius: 50% 50% 50% 50%;
+      background: linear-gradient(180deg, var(--c1), var(--c2));
+      box-shadow: inset 0 -3px 6px rgba(0,0,0,0.12);
+      margin-left: -7px;
+    }
+
+    .flower.daisy .petal-ring span:nth-child(1) { transform: rotate(0deg); }
+    .flower.daisy .petal-ring span:nth-child(2) { transform: rotate(45deg); }
+    .flower.daisy .petal-ring span:nth-child(3) { transform: rotate(90deg); }
+    .flower.daisy .petal-ring span:nth-child(4) { transform: rotate(135deg); }
+    .flower.daisy .petal-ring span:nth-child(5) { transform: rotate(180deg); }
+    .flower.daisy .petal-ring span:nth-child(6) { transform: rotate(225deg); }
+    .flower.daisy .petal-ring span:nth-child(7) { transform: rotate(270deg); }
+    .flower.daisy .petal-ring span:nth-child(8) { transform: rotate(315deg); }
+
+    .flower.daisy .center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #fde047, #ca8a04);
+      box-shadow: inset 0 -3px 6px rgba(0,0,0,0.25);
+      z-index: 2;
+    }
+
+    /* Type 3: Rose (hồng) - layered */
+    .flower.rose .flower-head {
+      width: 52px; height: 52px;
+      top: -5px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%,
+        var(--c1) 0%,
+        var(--c2) 60%,
+        #831843 100%);
+      box-shadow:
+        inset -6px -10px 16px rgba(0,0,0,0.25),
+        inset 4px 6px 10px rgba(255,255,255,0.35);
+    }
+
+    .flower.rose .flower-head::before {
+      content: "";
+      position: absolute;
+      inset: 20%;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--c2), color-mix(in srgb, var(--c2) 60%, black));
+      box-shadow: inset 0 -3px 6px rgba(0,0,0,0.3);
+    }
+
+    .flower.rose .flower-head::after {
+      content: "";
+      position: absolute;
+      inset: 38%;
+      border-radius: 50%;
+      background: color-mix(in srgb, var(--c2) 50%, black);
+    }
+
+    /* Type 4: Sunflower (hướng dương) */
+    .flower.sunflower .flower-head {
+      width: 64px; height: 64px;
+      top: -10px;
+    }
+
+    .flower.sunflower .petal-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+
+    .flower.sunflower .petal-ring span {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: 12px;
+      height: 26px;
+      transform-origin: 50% 32px;
+      border-radius: 50% 50% 30% 30%;
+      background: linear-gradient(180deg, #fde047, #ca8a04);
+      box-shadow: inset 0 -3px 5px rgba(0,0,0,0.18);
+      margin-left: -6px;
+    }
+
+    .flower.sunflower .petal-ring span:nth-child(1)  { transform: rotate(0deg); }
+    .flower.sunflower .petal-ring span:nth-child(2)  { transform: rotate(30deg); }
+    .flower.sunflower .petal-ring span:nth-child(3)  { transform: rotate(60deg); }
+    .flower.sunflower .petal-ring span:nth-child(4)  { transform: rotate(90deg); }
+    .flower.sunflower .petal-ring span:nth-child(5)  { transform: rotate(120deg); }
+    .flower.sunflower .petal-ring span:nth-child(6)  { transform: rotate(150deg); }
+    .flower.sunflower .petal-ring span:nth-child(7)  { transform: rotate(180deg); }
+    .flower.sunflower .petal-ring span:nth-child(8)  { transform: rotate(210deg); }
+    .flower.sunflower .petal-ring span:nth-child(9)  { transform: rotate(240deg); }
+    .flower.sunflower .petal-ring span:nth-child(10) { transform: rotate(270deg); }
+    .flower.sunflower .petal-ring span:nth-child(11) { transform: rotate(300deg); }
+    .flower.sunflower .petal-ring span:nth-child(12) { transform: rotate(330deg); }
+
+    .flower.sunflower .center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #92400e, #451a03);
+      box-shadow: inset 0 -3px 7px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+
+    /* Type 5: Cherry blossom (hoa anh đào) */
+    .flower.sakura .flower-head {
+      width: 52px; height: 52px;
+      top: -5px;
+    }
+
+    .flower.sakura .petal-ring span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 28px;
+      height: 28px;
+      margin-left: -14px;
+      margin-top: -14px;
+      border-radius: 50% 0 50% 50%;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      box-shadow: inset 0 -4px 8px rgba(0,0,0,0.15);
+      clip-path: polygon(50% 0, 100% 50%, 70% 100%, 30% 100%, 0 50%);
+    }
+
+    .flower.sakura .petal-ring span:nth-child(1) { transform: rotate(0deg) translateY(-10px); }
+    .flower.sakura .petal-ring span:nth-child(2) { transform: rotate(72deg) translateY(-10px); }
+    .flower.sakura .petal-ring span:nth-child(3) { transform: rotate(144deg) translateY(-10px); }
+    .flower.sakura .petal-ring span:nth-child(4) { transform: rotate(216deg) translateY(-10px); }
+    .flower.sakura .petal-ring span:nth-child(5) { transform: rotate(288deg) translateY(-10px); }
+
+    .flower.sakura .center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fde047, #d97706);
+      z-index: 2;
+    }
+
+    /* Type 6: Lavender */
+    .flower.lavender {
+      height: 110px;
+    }
+
+    .flower.lavender .stem {
+      height: 70%;
+    }
+
+    .flower.lavender .flower-head {
+      width: 18px;
+      height: 50px;
+      top: -8px;
+    }
+
+    .flower.lavender .bud {
+      position: absolute;
+      left: 50%;
+      width: 14px;
+      height: 14px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--c1), var(--c2));
+      box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2);
+    }
+
+    .flower.lavender .bud:nth-child(1) { top: 0;   }
+    .flower.lavender .bud:nth-child(2) { top: 10px; left: 30%; }
+    .flower.lavender .bud:nth-child(3) { top: 18px; left: 70%; }
+    .flower.lavender .bud:nth-child(4) { top: 26px; left: 35%; }
+    .flower.lavender .bud:nth-child(5) { top: 36px; left: 65%; }
+
+    /* Highlight on hover */
+    .flower:hover {
+      filter: drop-shadow(0 6px 14px rgba(236, 72, 153, 0.45));
+    }
+
+    .flower.has-message::after {
+      content: "💬";
+      position: absolute;
+      top: -10px;
+      right: -8px;
+      font-size: 14px;
+      animation: bobMessage 2s ease-in-out infinite;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    @keyframes bobMessage {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-4px) scale(1.1); }
+    }
+
+    /* ============ PLANT BUTTON ============ */
+    .plant-btn {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 100;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 26px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      color: white;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #ec4899, #a855f7);
+      box-shadow:
+        0 18px 40px rgba(236, 72, 153, 0.45),
+        inset 0 -4px 10px rgba(0,0,0,0.15);
+      transition: 0.25s ease;
+      animation: plantBtnBob 2.4s ease-in-out infinite;
+    }
+
+    @keyframes plantBtnBob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .plant-btn:hover {
+      transform: translateY(-4px) scale(1.05);
+      animation: none;
+    }
+
+    .plant-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      animation: none;
+    }
+
+    .plant-btn .icon {
+      font-size: 22px;
+    }
+
+    /* ============ MODAL ============ */
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(31, 41, 55, 0.55);
+      backdrop-filter: blur(14px);
+    }
+
+    .modal.active {
+      display: flex;
+      animation: modalFade 0.25s ease;
+    }
+
+    @keyframes modalFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-card {
+      position: relative;
+      width: min(560px, 100%);
+      max-height: 92vh;
+      overflow-y: auto;
+      padding: 36px 30px;
+      border-radius: 30px;
+      background: linear-gradient(160deg, #fff1f5, #f3e8ff);
+      box-shadow: 0 30px 80px rgba(236, 72, 153, 0.28);
+      animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes modalPop {
+      from { transform: scale(0.85) translateY(40px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      color: #be185d;
+      background: rgba(255,255,255,0.85);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .modal-card h2 {
+      font-size: 26px;
+      margin-bottom: 6px;
+      color: #1f2937;
+    }
+
+    .modal-sub {
+      color: var(--text-soft);
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .step {
+      margin-bottom: 22px;
+    }
+
+    .step > label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 800;
+      font-size: 14px;
+      color: #6b21a8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Flower type picker */
+    .flower-picker {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .flower-option {
+      position: relative;
+      padding: 14px 6px 10px;
+      border: 2px solid transparent;
+      border-radius: 16px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.6);
+      transition: 0.2s ease;
+      font-family: inherit;
+    }
+
+    .flower-option:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.9);
+    }
+
+    .flower-option.selected {
+      border-color: #ec4899;
+      background: rgba(255,255,255,1);
+      box-shadow: 0 8px 22px rgba(236, 72, 153, 0.25);
+    }
+
+    .flower-preview {
+      position: relative;
+      width: 50px;
+      height: 70px;
+      margin: 0 auto 6px;
+    }
+
+    .flower-option span {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #374151;
+    }
+
+    /* Color picker */
+    .color-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .color-swatch {
+      width: 38px;
+      height: 38px;
+      border: 3px solid transparent;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      padding: 0;
+    }
+
+    .color-swatch:hover { transform: scale(1.1); }
+    .color-swatch.selected {
+      border-color: #1f2937;
+      transform: scale(1.15);
+    }
+
+    /* Inputs */
+    .step input, .step textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid rgba(168, 85, 247, 0.22);
+      border-radius: 14px;
+      outline: none;
+      font-family: inherit;
+      font-size: 15px;
+      color: #1f2937;
+      background: rgba(255,255,255,0.85);
+      transition: 0.2s ease;
+    }
+
+    .step input:focus, .step textarea:focus {
+      border-color: #ec4899;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(236, 72, 153, 0.1);
+    }
+
+    .step textarea {
+      min-height: 90px;
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .char-count {
+      display: block;
+      margin-top: 6px;
+      text-align: right;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .grow-btn {
+      width: 100%;
+      padding: 16px;
+      margin-top: 8px;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      color: white;
+      font-family: inherit;
+      font-weight: 900;
+      font-size: 17px;
+      background: linear-gradient(135deg, #ec4899, #a855f7, #38bdf8);
+      box-shadow: 0 14px 32px rgba(236, 72, 153, 0.4);
+      transition: 0.2s ease;
+    }
+
+    .grow-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 38px rgba(236, 72, 153, 0.5);
+    }
+
+    .grow-btn:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .cooldown-note {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    /* ============ FLOWER TOOLTIP ============ */
+    .flower-tooltip {
+      position: fixed;
+      z-index: 400;
+      max-width: 280px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 18px 40px rgba(236, 72, 153, 0.3);
+      border: 1px solid rgba(236, 72, 153, 0.15);
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.85);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .flower-tooltip.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .flower-tooltip strong {
+      display: block;
+      color: #be185d;
+      font-size: 15px;
+      margin-bottom: 4px;
+    }
+
+    .flower-tooltip small {
+      display: block;
+      color: var(--text-soft);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .flower-tooltip p {
+      color: #1f2937;
+      font-size: 14px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .flower-tooltip .tip-empty {
+      color: var(--text-soft);
+      font-style: italic;
+    }
+
+    .tip-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      border: none;
+      background: transparent;
+      cursor: pointer;
+      color: #be185d;
+      font-size: 16px;
+      font-weight: 900;
+      pointer-events: auto;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 100px;
+      transform: translateX(-50%) translateY(100px);
+      z-index: 800;
+      padding: 14px 26px;
+      border-radius: 999px;
+      background: rgba(31, 41, 55, 0.95);
+      color: white;
+      font-weight: 800;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.35);
+      opacity: 0;
+      transition: 0.35s ease;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Mode badge - shows storage mode */
+    .mode-badge {
+      position: fixed;
+      bottom: 22px;
+      left: 22px;
+      z-index: 100;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.7);
+      font-size: 11px;
+      color: var(--text-soft);
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
+    .mode-badge.firebase {
+      background: rgba(34, 197, 94, 0.2);
+      color: #166534;
+    }
+
+    @media (max-width: 600px) {
+      .modal-card { padding: 28px 22px; }
+      .flower-picker { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+      .flower-option { padding: 10px 4px 8px; }
+      .flower-preview { width: 40px; height: 60px; }
+      .plant-btn { padding: 14px 20px; bottom: 18px; right: 18px; }
+      .garden-header { padding: 30px 14px 20px; }
+      .header-card { padding: 22px 24px; }
+    }
+  </style>
+</head>
+
+<body>
+  <a href="index.html" class="back-home">← Quay lại profile</a>
+
+  <div class="sky-layer">
+    <div class="sun"></div>
+    <span class="cloud c1"></span>
+    <span class="cloud c2"></span>
+    <span class="cloud c3"></span>
+  </div>
+
+  <div class="hills">
+    <div class="hill h1"></div>
+    <div class="hill h2"></div>
+  </div>
+
+  <span class="butterfly b1">🦋</span>
+  <span class="butterfly b2">🦋</span>
+  <span class="butterfly b3">🦋</span>
+
+  <div class="container">
+    <header class="garden-header">
+      <div class="header-card">
+        <h1>Khu vườn của <span class="name-gradient">Tiến</span></h1>
+        <p class="subtitle">Hãy để lại một bông hoa nhỏ ở đây nha 🌸</p>
+        <div class="counter">
+          <span class="counter-emoji">🌷</span>
+          <strong id="flowerCount">0</strong>
+          bông hoa đã nở
+        </div>
+      </div>
+    </header>
+
+    <div class="garden-wrap">
+      <div class="garden" id="garden">
+        <div class="empty-state" id="emptyState">
+          <span>🌱</span>
+          Chưa có bông hoa nào...
+          <br>Hãy là người đầu tiên trồng nha 💗
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="plant-btn" id="plantBtn">
+    <span class="icon">🌱</span>
+    <span id="plantBtnLabel">Trồng hoa</span>
+  </button>
+
+  <div class="mode-badge" id="modeBadge">📱 Chế độ local (riêng tư)</div>
+
+  <!-- Modal -->
+  <div class="modal" id="plantModal">
+    <div class="modal-card">
+      <button class="modal-close" id="modalClose" type="button">×</button>
+      <h2>Trồng một bông hoa nhỏ 🌸</h2>
+      <p class="modal-sub">Bông hoa của bạn sẽ ở lại đây trong khu vườn này nha.</p>
+
+      <div class="step">
+        <label>1. Chọn loại hoa</label>
+        <div class="flower-picker" id="flowerPicker">
+          <button class="flower-option selected" data-type="tulip" type="button">
+            <div class="flower-preview"><div class="flower tulip" style="--c1:#fb7185;--c2:#be123c;position:relative;left:50%"><div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"></div></div></div></div>
+            <span>Tulip</span>
+          </button>
+          <button class="flower-option" data-type="daisy" type="button">
+            <div class="flower-preview"><div class="flower daisy" style="--c1:#fff;--c2:#fce7f3;position:relative;left:50%"><div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="petal-ring"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="center"></div></div></div></div></div>
+            <span>Cúc</span>
+          </button>
+          <button class="flower-option" data-type="rose" type="button">
+            <div class="flower-preview"><div class="flower rose" style="--c1:#fda4af;--c2:#e11d48;position:relative;left:50%"><div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"></div></div></div></div>
+            <span>Hồng</span>
+          </button>
+          <button class="flower-option" data-type="sunflower" type="button">
+            <div class="flower-preview"><div class="flower sunflower" style="--c1:#fde047;--c2:#ca8a04;position:relative;left:50%"><div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="petal-ring"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="center"></div></div></div></div></div>
+            <span>Hướng dương</span>
+          </button>
+          <button class="flower-option" data-type="sakura" type="button">
+            <div class="flower-preview"><div class="flower sakura" style="--c1:#fbcfe8;--c2:#f472b6;position:relative;left:50%"><div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="petal-ring"><span></span><span></span><span></span><span></span><span></span></div><div class="center"></div></div></div></div></div>
+            <span>Anh đào</span>
+          </button>
+          <button class="flower-option" data-type="lavender" type="button">
+            <div class="flower-preview"><div class="flower lavender" style="--c1:#c4b5fd;--c2:#7c3aed;position:relative;left:50%"><div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="bud"></div><div class="bud"></div><div class="bud"></div><div class="bud"></div><div class="bud"></div></div></div></div></div>
+            <span>Lavender</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="step">
+        <label>2. Chọn màu</label>
+        <div class="color-picker" id="colorPicker">
+          <button class="color-swatch selected" data-color="pink" style="background:linear-gradient(135deg,#fb7185,#be123c)" type="button"></button>
+          <button class="color-swatch" data-color="purple" style="background:linear-gradient(135deg,#c084fc,#7c3aed)" type="button"></button>
+          <button class="color-swatch" data-color="red" style="background:linear-gradient(135deg,#fca5a5,#dc2626)" type="button"></button>
+          <button class="color-swatch" data-color="yellow" style="background:linear-gradient(135deg,#fde047,#ca8a04)" type="button"></button>
+          <button class="color-swatch" data-color="blue" style="background:linear-gradient(135deg,#93c5fd,#1d4ed8)" type="button"></button>
+          <button class="color-swatch" data-color="white" style="background:linear-gradient(135deg,#fff,#e5e7eb)" type="button"></button>
+          <button class="color-swatch" data-color="peach" style="background:linear-gradient(135deg,#fed7aa,#ea580c)" type="button"></button>
+          <button class="color-swatch" data-color="mint" style="background:linear-gradient(135deg,#a7f3d0,#059669)" type="button"></button>
+        </div>
+      </div>
+
+      <div class="step">
+        <label>3. Tên (tuỳ chọn)</label>
+        <input id="plantName" type="text" maxlength="30" placeholder="Bạn có thể để ẩn danh">
+      </div>
+
+      <div class="step">
+        <label>4. Lời nhắn cho khu vườn</label>
+        <textarea id="plantMessage" maxlength="200" placeholder="Một lời chúc, một suy nghĩ, một kỷ niệm..."></textarea>
+        <small class="char-count"><span id="msgCharCount">0</span>/200</small>
+      </div>
+
+      <button class="grow-btn" id="growBtn" type="button">Gieo hạt ✨</button>
+      <p class="cooldown-note" id="cooldownNote"></p>
+    </div>
+  </div>
+
+  <!-- Click flower → show this -->
+  <div class="flower-tooltip" id="flowerTooltip">
+    <button class="tip-close" id="tipClose" type="button">×</button>
+    <strong id="tipName"></strong>
+    <small id="tipDate"></small>
+    <p id="tipMessage"></p>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Falling petals -->
+  <span class="petal" style="left:8%;animation-duration:14s;animation-delay:0s"></span>
+  <span class="petal" style="left:22%;animation-duration:18s;animation-delay:3s"></span>
+  <span class="petal" style="left:42%;animation-duration:16s;animation-delay:6s"></span>
+  <span class="petal" style="left:62%;animation-duration:15s;animation-delay:1.5s"></span>
+  <span class="petal" style="left:78%;animation-duration:17s;animation-delay:4.5s"></span>
+  <span class="petal" style="left:92%;animation-duration:13s;animation-delay:7.5s"></span>
+
+  <script type="module">
+    /* ============================================================
+       CẤU HÌNH FIREBASE
+       ------------------------------------------------------------
+       Để chia sẻ vườn giữa mọi người, paste config Firebase vào đây.
+       Khi chưa có config, app dùng localStorage (mỗi máy 1 vườn riêng).
+
+       Hướng dẫn lấy config:
+       1. firebase.google.com → Add project (5 phút)
+       2. Build → Realtime Database → Create (Test mode)
+       3. Settings ⚙ → Your apps → Web </> → Register app
+       4. Copy object firebaseConfig dưới đây, paste thay block này
+       5. Trong Rules tab: { "rules": { ".read": true, ".write": true } }
+    ============================================================ */
+    const firebaseConfig = {
+      // PASTE_FIREBASE_CONFIG_HERE
+      // apiKey: "...",
+      // authDomain: "...",
+      // databaseURL: "https://....firebaseio.com",
+      // projectId: "...",
+      // storageBucket: "...",
+      // messagingSenderId: "...",
+      // appId: "..."
+    };
+
+    const COLORS = {
+      pink:   { c1: "#fb7185", c2: "#be123c" },
+      purple: { c1: "#c084fc", c2: "#7c3aed" },
+      red:    { c1: "#fca5a5", c2: "#dc2626" },
+      yellow: { c1: "#fde047", c2: "#ca8a04" },
+      blue:   { c1: "#93c5fd", c2: "#1d4ed8" },
+      white:  { c1: "#ffffff", c2: "#e5e7eb" },
+      peach:  { c1: "#fed7aa", c2: "#ea580c" },
+      mint:   { c1: "#a7f3d0", c2: "#059669" }
+    };
+
+    const FLOWER_TEMPLATES = {
+      tulip:     `<div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"></div></div>`,
+      daisy:     `<div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="petal-ring"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="center"></div></div></div>`,
+      rose:      `<div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"></div></div>`,
+      sunflower: `<div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="petal-ring"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div><div class="center"></div></div></div>`,
+      sakura:    `<div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="petal-ring"><span></span><span></span><span></span><span></span><span></span></div><div class="center"></div></div></div>`,
+      lavender:  `<div class="flower-sway"><div class="stem"></div><div class="leaf left"></div><div class="leaf right"></div><div class="flower-head"><div class="bud"></div><div class="bud"></div><div class="bud"></div><div class="bud"></div><div class="bud"></div></div></div>`
+    };
+
+    /* ============ STORAGE ABSTRACTION ============ */
+    let useFirebase = false;
+    let fbDb = null;
+    let fbFlowersRef = null;
+
+    async function initStorage() {
+      const hasConfig = firebaseConfig.databaseURL && firebaseConfig.apiKey;
+      if (!hasConfig) return false;
+      try {
+        const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js");
+        const { getDatabase, ref, onValue, push } =
+          await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js");
+        const app = initializeApp(firebaseConfig);
+        fbDb = getDatabase(app);
+        fbFlowersRef = ref(fbDb, "flowers");
+        window.__fb = { onValue, push };
+        useFirebase = true;
+        return true;
+      } catch (err) {
+        console.warn("Firebase init failed, fallback localStorage:", err);
+        return false;
+      }
+    }
+
+    function localLoad() {
+      try {
+        return JSON.parse(localStorage.getItem("garden-flowers")) || [];
+      } catch { return []; }
+    }
+
+    function localSave(arr) {
+      localStorage.setItem("garden-flowers", JSON.stringify(arr));
+    }
+
+    async function fetchAllFlowers() {
+      if (useFirebase) return; // populated via realtime listener
+      const flowers = localLoad();
+      renderAllFlowers(flowers);
+    }
+
+    function subscribeFlowers(onUpdate) {
+      if (useFirebase && fbFlowersRef && window.__fb) {
+        window.__fb.onValue(fbFlowersRef, (snap) => {
+          const data = snap.val() || {};
+          const arr = Object.entries(data).map(([id, v]) => ({ id, ...v }));
+          arr.sort((a,b) => (a.t || 0) - (b.t || 0));
+          onUpdate(arr);
+        });
+      }
+    }
+
+    async function saveFlower(flower) {
+      if (useFirebase && fbFlowersRef && window.__fb) {
+        await window.__fb.push(fbFlowersRef, flower);
+      } else {
+        const arr = localLoad();
+        flower.id = "local_" + Date.now() + "_" + Math.random().toString(36).slice(2, 7);
+        arr.push(flower);
+        localSave(arr);
+        renderAllFlowers(arr);
+      }
+    }
+
+    /* ============ RENDERING ============ */
+    const garden = document.getElementById("garden");
+    const emptyState = document.getElementById("emptyState");
+    const flowerCountEl = document.getElementById("flowerCount");
+
+    let currentFlowers = [];
+
+    function renderAllFlowers(arr) {
+      currentFlowers = arr;
+      flowerCountEl.textContent = arr.length.toLocaleString("vi-VN");
+
+      garden.querySelectorAll(".flower").forEach(el => el.remove());
+
+      if (arr.length === 0) {
+        emptyState.style.display = "block";
+        return;
+      }
+      emptyState.style.display = "none";
+
+      arr.forEach((f, i) => {
+        const node = createFlowerNode(f, i, false);
+        garden.appendChild(node);
+      });
+
+      adjustGardenHeight();
+    }
+
+    function appendNewFlower(f) {
+      currentFlowers.push(f);
+      flowerCountEl.textContent = currentFlowers.length.toLocaleString("vi-VN");
+      emptyState.style.display = "none";
+      garden.appendChild(createFlowerNode(f, currentFlowers.length - 1, true));
+      adjustGardenHeight();
+    }
+
+    function createFlowerNode(f, idx, isNew) {
+      const div = document.createElement("div");
+      div.className = `flower ${f.type}${f.message ? " has-message" : ""}`;
+      const col = COLORS[f.color] || COLORS.pink;
+      div.style.setProperty("--c1", col.c1);
+      div.style.setProperty("--c2", col.c2);
+
+      const xPercent = (typeof f.x === "number") ? f.x : Math.random() * 90 + 5;
+      const yPx = (typeof f.y === "number") ? f.y : Math.floor(Math.random() * 360);
+
+      div.style.setProperty("--x", `${xPercent}%`);
+      div.style.setProperty("--y", `${yPx}px`);
+      div.style.setProperty("--z", String(1000 - yPx));
+
+      if (!isNew) div.style.animation = "none";
+
+      div.innerHTML = FLOWER_TEMPLATES[f.type] || FLOWER_TEMPLATES.tulip;
+
+      div.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showTooltip(div, f);
+      });
+
+      return div;
+    }
+
+    function adjustGardenHeight() {
+      let maxY = 0;
+      garden.querySelectorAll(".flower").forEach(el => {
+        const y = parseInt(el.style.getPropertyValue("--y") || "0", 10);
+        if (y > maxY) maxY = y;
+      });
+      garden.style.minHeight = Math.max(maxY + 220, window.innerHeight * 0.7) + "px";
+    }
+
+    /* ============ TOOLTIP ============ */
+    const tooltip = document.getElementById("flowerTooltip");
+    const tipName = document.getElementById("tipName");
+    const tipDate = document.getElementById("tipDate");
+    const tipMessage = document.getElementById("tipMessage");
+    const tipClose = document.getElementById("tipClose");
+
+    function showTooltip(target, f) {
+      tipName.textContent = f.name?.trim() || "Một người ẩn danh";
+      tipDate.textContent = f.t ? new Date(f.t).toLocaleDateString("vi-VN", {
+        weekday: "long", day: "2-digit", month: "long", year: "numeric"
+      }) : "";
+
+      if (f.message?.trim()) {
+        tipMessage.textContent = f.message;
+        tipMessage.classList.remove("tip-empty");
+      } else {
+        tipMessage.textContent = "Không để lại lời nhắn 🌷";
+        tipMessage.classList.add("tip-empty");
+      }
+
+      const rect = target.getBoundingClientRect();
+      const ttRect = { w: 280, h: 140 };
+
+      let left = rect.left + rect.width / 2 - ttRect.w / 2;
+      let top  = rect.top - ttRect.h - 16;
+
+      if (top < 80) top = rect.bottom + 14;
+      if (left < 10) left = 10;
+      if (left + ttRect.w > window.innerWidth - 10) left = window.innerWidth - ttRect.w - 10;
+
+      tooltip.style.left = left + "px";
+      tooltip.style.top = top + "px";
+      tooltip.classList.add("active");
+    }
+
+    function hideTooltip() {
+      tooltip.classList.remove("active");
+    }
+
+    tipClose.addEventListener("click", hideTooltip);
+    document.addEventListener("click", (e) => {
+      if (!tooltip.contains(e.target) && !e.target.closest(".flower")) hideTooltip();
+    });
+
+    /* ============ MODAL ============ */
+    const modal = document.getElementById("plantModal");
+    const plantBtn = document.getElementById("plantBtn");
+    const modalClose = document.getElementById("modalClose");
+    const flowerPicker = document.getElementById("flowerPicker");
+    const colorPicker = document.getElementById("colorPicker");
+    const plantNameInput = document.getElementById("plantName");
+    const plantMessageInput = document.getElementById("plantMessage");
+    const msgCharCount = document.getElementById("msgCharCount");
+    const growBtn = document.getElementById("growBtn");
+    const cooldownNote = document.getElementById("cooldownNote");
+
+    let selectedType = "tulip";
+    let selectedColor = "pink";
+
+    plantBtn.addEventListener("click", () => {
+      modal.classList.add("active");
+    });
+
+    modalClose.addEventListener("click", () => modal.classList.remove("active"));
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.classList.remove("active");
+    });
+
+    flowerPicker.addEventListener("click", (e) => {
+      const btn = e.target.closest(".flower-option");
+      if (!btn) return;
+      flowerPicker.querySelectorAll(".flower-option").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedType = btn.dataset.type;
+    });
+
+    colorPicker.addEventListener("click", (e) => {
+      const btn = e.target.closest(".color-swatch");
+      if (!btn) return;
+      colorPicker.querySelectorAll(".color-swatch").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      selectedColor = btn.dataset.color;
+    });
+
+    plantMessageInput.addEventListener("input", () => {
+      msgCharCount.textContent = plantMessageInput.value.length;
+    });
+
+    /* ============ COOLDOWN (1 hoa / ngày) ============ */
+    const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+    function getLastPlant() {
+      return parseInt(localStorage.getItem("garden-last-plant") || "0", 10);
+    }
+
+    function setLastPlant(ts) {
+      localStorage.setItem("garden-last-plant", String(ts));
+    }
+
+    function updateCooldownUI() {
+      const last = getLastPlant();
+      const now = Date.now();
+      const remaining = COOLDOWN_MS - (now - last);
+
+      if (remaining > 0) {
+        const hours = Math.ceil(remaining / 3600000);
+        plantBtn.disabled = true;
+        document.getElementById("plantBtnLabel").textContent = `Quay lại sau ${hours}h`;
+        growBtn.disabled = true;
+        cooldownNote.textContent = `Hôm nay bạn đã trồng rồi nha 🌷 Hẹn lại sau ${hours} giờ nữa nhé.`;
+      } else {
+        plantBtn.disabled = false;
+        document.getElementById("plantBtnLabel").textContent = "Trồng hoa";
+        growBtn.disabled = false;
+        cooldownNote.textContent = "Mỗi người trồng được 1 bông mỗi 24 giờ 💗";
+      }
+    }
+
+    /* ============ GROW (SUBMIT) ============ */
+    growBtn.addEventListener("click", async () => {
+      const last = getLastPlant();
+      if (Date.now() - last < COOLDOWN_MS) {
+        toast("Bạn đã trồng hoa hôm nay rồi nha 🌷");
+        return;
+      }
+
+      growBtn.disabled = true;
+      growBtn.textContent = "Đang gieo hạt...";
+
+      const flower = {
+        type: selectedType,
+        color: selectedColor,
+        name: plantNameInput.value.trim().slice(0, 30),
+        message: plantMessageInput.value.trim().slice(0, 200),
+        x: Math.floor(Math.random() * 88) + 6,
+        y: Math.floor(Math.random() * 380),
+        t: Date.now()
+      };
+
+      try {
+        await saveFlower(flower);
+        if (!useFirebase) {
+          // local mode already rendered via renderAllFlowers in saveFlower
+        }
+        setLastPlant(Date.now());
+        modal.classList.remove("active");
+        toast("Bông hoa đã nở rồi 🌸");
+        plantMessageInput.value = "";
+        plantNameInput.value = "";
+        msgCharCount.textContent = "0";
+      } catch (e) {
+        toast("Có lỗi khi gieo hạt, thử lại nhé.");
+      } finally {
+        growBtn.textContent = "Gieo hạt ✨";
+        updateCooldownUI();
+      }
+    });
+
+    /* ============ TOAST ============ */
+    const toastEl = document.getElementById("toast");
+    let toastTimer = null;
+    function toast(text) {
+      toastEl.textContent = text;
+      toastEl.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2400);
+    }
+
+    /* ============ INIT ============ */
+    (async function init() {
+      const ok = await initStorage();
+      const badge = document.getElementById("modeBadge");
+      if (ok) {
+        badge.textContent = "🌍 Chế độ chia sẻ (Firebase)";
+        badge.classList.add("firebase");
+        subscribeFlowers(renderAllFlowers);
+      } else {
+        badge.textContent = "📱 Chế độ local (riêng tư)";
+        await fetchAllFlowers();
+      }
+      updateCooldownUI();
+    })();
+
+    window.addEventListener("resize", adjustGardenHeight);
+
+    /* ============ SEED — 1 vài bông hoa khởi đầu nếu vườn local rỗng ============ */
+    (function seedIfEmpty() {
+      const existing = localLoad();
+      if (existing.length > 0 || useFirebase) return;
+      const seeds = [
+        { type: "tulip",     color: "pink",   name: "Tiến",   message: "Chào mừng bạn đến với khu vườn nhỏ này 💗 Hãy để lại một bông hoa của riêng bạn nha.", x: 18, y: 60, t: Date.now() - 86400000 * 3 },
+        { type: "sakura",    color: "pink",   name: "Tiến",   message: "Hoa anh đào ở Nhật năm nay đẹp lắm. Mình muốn cậu cũng được thấy.", x: 42, y: 130, t: Date.now() - 86400000 * 2 },
+        { type: "sunflower", color: "yellow", name: "Tiến",   message: "Cố gắng nha. Ngày nào cũng vậy.", x: 68, y: 200, t: Date.now() - 86400000 },
+        { type: "lavender",  color: "purple", name: "Tiến",   message: "Cho những đêm khó ngủ.", x: 86, y: 60, t: Date.now() - 3600000 * 5 }
+      ];
+      localSave(seeds);
+    })();
+  </script>
+</body>
+</html>
