@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập - Profile Tiến</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+      font-size: 24px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .login-header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    .btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .toggle-text {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .toggle-text a {
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-text a:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      padding: 12px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-align: center;
+      display: none;
+    }
+
+    .message.error {
+      background: #fee;
+      color: #c00;
+      border: 1px solid #fcc;
+    }
+
+    .message.success {
+      background: #efe;
+      color: #060;
+      border: 1px solid #cfc;
+    }
+
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      color: #333;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <!-- Login Form -->
+    <div id="loginForm">
+      <div class="login-header">
+        <h1>Chào bạn!</h1>
+        <p>Đăng nhập để trò chuyện với mình</p>
+      </div>
+
+      <div id="loginMessage" class="message"></div>
+
+      <div class="form-group">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" placeholder="email@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="loginPassword">Mật khẩu</label>
+        <input type="password" id="loginPassword" placeholder="Nhập mật khẩu" required>
+      </div>
+
+      <button class="btn btn-primary" id="loginBtn" onclick="handleLogin()">
+        Đăng nhập
+      </button>
+
+      <p class="toggle-text">
+        Chưa có tài khoản? <a onclick="showRegister()">Đăng ký ngay</a>
+      </p>
+    </div>
+
+    <!-- Register Form -->
+    <div id="registerForm" class="hidden">
+      <div class="login-header">
+        <h1>Tạo tài khoản</h1>
+        <p>Đăng ký để lưu tin nhắn & dùng AI chatbot</p>
+      </div>
+
+      <div id="registerMessage" class="message"></div>
+
+      <div class="form-group">
+        <label for="registerName">Tên hiển thị</label>
+        <input type="text" id="registerName" placeholder="Tên bạn" required>
+      </div>
+
+      <div class="form-group">
+        <label for="registerEmail">Email</label>
+        <input type="email" id="registerEmail" placeholder="email@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="registerPassword">Mật khẩu</label>
+        <input type="password" id="registerPassword" placeholder="Ít nhất 6 ký tự" required>
+      </div>
+
+      <button class="btn btn-primary" id="registerBtn" onclick="handleRegister()">
+        Đăng ký
+      </button>
+
+      <p class="toggle-text">
+        Đã có tài khoản? <a onclick="showLogin()">Đăng nhập</a>
+      </p>
+    </div>
+
+    <a href="index.html" class="back-link">← Quay lại trang chủ</a>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="firebase.js"></script>
+
+  <script>
+    // Kiểm tra đã đăng nhập chưa
+    FirebaseService.onAuthStateChange((user) => {
+      if (user) {
+        // Đã đăng nhập → chuyển về trang chủ
+        window.location.href = 'index.html';
+      }
+    });
+
+    function showLogin() {
+      document.getElementById('loginForm').classList.remove('hidden');
+      document.getElementById('registerForm').classList.add('hidden');
+      clearMessages();
+    }
+
+    function showRegister() {
+      document.getElementById('loginForm').classList.add('hidden');
+      document.getElementById('registerForm').classList.remove('hidden');
+      clearMessages();
+    }
+
+    function clearMessages() {
+      document.getElementById('loginMessage').style.display = 'none';
+      document.getElementById('registerMessage').style.display = 'none';
+    }
+
+    function showMessage(elementId, message, type) {
+      const el = document.getElementById(elementId);
+      el.textContent = message;
+      el.className = `message ${type}`;
+      el.style.display = 'block';
+    }
+
+    function setButtonLoading(btnId, loading) {
+      const btn = document.getElementById(btnId);
+      if (loading) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading"></span> Đang xử lý...';
+      } else {
+        btn.disabled = false;
+        btn.textContent = btnId === 'loginBtn' ? 'Đăng nhập' : 'Đăng ký';
+      }
+    }
+
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showMessage('loginMessage', 'Vui lòng điền đầy đủ thông tin!', 'error');
+        return;
+      }
+
+      setButtonLoading('loginBtn', true);
+
+      const result = await FirebaseService.loginUser(email, password);
+
+      setButtonLoading('loginBtn', false);
+
+      if (result.success) {
+        showMessage('loginMessage', 'Đăng nhập thành công! Đang chuyển...', 'success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 500);
+      } else {
+        showMessage('loginMessage', result.error, 'error');
+      }
+    }
+
+    async function handleRegister() {
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const password = document.getElementById('registerPassword').value;
+
+      if (!name || !email || !password) {
+        showMessage('registerMessage', 'Vui lòng điền đầy đủ thông tin!', 'error');
+        return;
+      }
+
+      if (password.length < 6) {
+        showMessage('registerMessage', 'Mật khẩu phải ít nhất 6 ký tự!', 'error');
+        return;
+      }
+
+      setButtonLoading('registerBtn', true);
+
+      const result = await FirebaseService.registerUser(email, password, name);
+
+      setButtonLoading('registerBtn', false);
+
+      if (result.success) {
+        showMessage('registerMessage', 'Đăng ký thành công! Đang chuyển...', 'success');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 500);
+      } else {
+        showMessage('registerMessage', result.error, 'error');
+      }
+    }
+
+    // Enter key to submit
+    document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+    document.getElementById('registerPassword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleRegister();
+    });
+  </script>
+</body>
+</html>
